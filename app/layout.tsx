@@ -2,14 +2,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Navimow Szakértő | Robotfűnyíró Kalkulátor',
-  description: 'Találja meg a kertjéhez tökéletes Segway Navimow robotfűnyírót másodpercek alatt! Hivatalos kalkulátor és legközelebbi partner kereső.',
-  openGraph: {
-    title: 'Navimow Szakértő | Robotfűnyíró Kalkulátor',
-    description: 'Találja meg a kertjéhez tökéletes Segway Navimow robotfűnyírót másodpercek alatt!',
-    images: ['/hatter.jpg'],
-    locale: 'hu_HU',
-    type: 'website',
-  },
+  description: 'Találja meg a kertjéhez tökéletes Segway Navimow robotfűnyírót másodpercek alatt!',
 }
 
 export default function RootLayout({
