@@ -43,7 +43,7 @@ export default function SegwayKalkulator() {
   const [progress, setProgress] = useState(0);
   const [arnyekoltValue, setArnyekoltValue] = useState("nem");
   
-  // ÚJ: Hibakezelés és töltés állapotok
+  // Hibakezelés és töltés állapotok
   const [cityError, setCityError] = useState("");
   const [isCheckingCity, setIsCheckingCity] = useState(false);
 
@@ -70,10 +70,11 @@ export default function SegwayKalkulator() {
       const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(telepules)}, Hungary`);
       const data = await res.json();
       
+      // HA NEM TALÁLJA A VÁROST:
       if (!data || data.length === 0) {
-        setCityError("Nem találjuk ezt a települést. Kérjük, ellenőrizze a helyesírást!");
+        setCityError("Nem találjuk ezt a települést. Lehet, hogy elírta a nevét?");
         setIsCheckingCity(false);
-        return; // MEGÁLLÍTJUK A FOLYAMATOT!
+        return; // MEGÁLLÍTJUK A FOLYAMATOT
       }
 
       const userLat = parseFloat(data[0].lat);
@@ -235,7 +236,7 @@ export default function SegwayKalkulator() {
                 onChange={() => setCityError("")}
                 className={`w-full px-5 py-4 bg-gray-100 border ${cityError ? 'border-red-500 ring-4 ring-red-500/20' : 'border-gray-200'} rounded-xl focus:bg-white focus:ring-4 focus:ring-[#ff5a00]/20 focus:border-[#ff5a00] transition-all text-gray-900 font-bold text-base outline-none placeholder:text-gray-400 shadow-sm`} />
               
-              {/* --- ÚJ: HIBAÜZENET A TELEPÜLÉSHEZ --- */}
+              {/* --- HIBAÜZENET A TELEPÜLÉSHEZ --- */}
               {cityError && (
                 <div className="mt-2 text-xs font-bold text-red-500 flex items-center gap-1 ml-1">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -261,7 +262,7 @@ export default function SegwayKalkulator() {
               </div>
             )}
 
-            {/* --- ÚJ: GDPR CHECKBOX --- */}
+            {/* --- KÖTELEZŐ GDPR CHECKBOX --- */}
             <div className="md:col-span-2 mt-2 px-1">
               <label className="flex items-start gap-3 cursor-pointer group">
                 <div className="relative flex items-center justify-center mt-0.5 shrink-0">
