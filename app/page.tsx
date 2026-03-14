@@ -42,7 +42,7 @@ export default function SegwayKalkulator() {
   const [eredmeny, setEredmeny] = useState<any>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [arnyekoltValue, setArnyekoltValue] = useState("nem"); // Új state a kártyákhoz
+  const [arnyekoltValue, setArnyekoltValue] = useState("nem"); // ÚJ: State a kártyákhoz
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -197,7 +197,7 @@ export default function SegwayKalkulator() {
               </div>
             </div>
 
-            {/* --- ÚJ: IKONOS VÁLASZTÓKÁRTYÁK (Rádiógombok helyett) --- */}
+            {/* --- VISSZAÁLLÍTOTT IKONOS VÁLASZTÓKÁRTYÁK --- */}
             <div className="flex flex-col md:col-span-2">
               <div className="flex items-center gap-2 mb-2 ml-1">
                 <label className="text-xs font-bold text-gray-700 uppercase tracking-widest">
@@ -306,15 +306,25 @@ export default function SegwayKalkulator() {
                 {eredmeny.indoklas}
               </p>
               
-              <a href={eredmeny.link} target="_blank" rel="noreferrer" 
-                className="w-full flex items-center justify-center gap-2 px-8 py-5 bg-[#111] text-white rounded-xl font-black text-lg uppercase tracking-wider hover:bg-[#ff5a00] hover:shadow-[0_10px_30px_rgba(255,90,0,0.4)] transform active:scale-[0.98] transition-all">
-                Megnézem a terméket
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-              </a>
-
-              {/* --- ÚJ: KERESKEDŐ MEGJELENÍTÉSE --- */}
+              {/* --- ÚJ: NAVIGÁCIÓ ÉS HÍVÁS GOMBOK --- */}
               {eredmeny.kereskedo && (
-                <div className="mt-8 p-5 bg-orange-50 rounded-2xl border border-orange-100 text-left shadow-sm">
+                <div className="flex flex-col sm:flex-row gap-3 w-full mb-6">
+                  <a href={`https://www.google.com/maps/dir/?api=1&destination=${eredmeny.kereskedo.lat},${eredmeny.kereskedo.lon}`} target="_blank" rel="noreferrer" 
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-4 bg-[#ff5a00] text-white rounded-xl font-black text-sm uppercase tracking-wider hover:bg-[#e04f00] hover:shadow-[0_5px_15px_rgba(255,90,0,0.4)] transform active:scale-[0.98] transition-all">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    Navigáció indítása
+                  </a>
+                  <a href={`tel:${eredmeny.kereskedo.telefon.replace(/\s+/g, '')}`} 
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-4 bg-[#111] text-white rounded-xl font-black text-sm uppercase tracking-wider hover:bg-gray-800 hover:shadow-[0_5px_15px_rgba(0,0,0,0.3)] transform active:scale-[0.98] transition-all">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                    Kereskedés hívása
+                  </a>
+                </div>
+              )}
+
+              {/* --- KERESKEDŐ MEGJELENÍTÉSE --- */}
+              {eredmeny.kereskedo && (
+                <div className="p-5 bg-orange-50 rounded-2xl border border-orange-100 text-left shadow-sm">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-lg">📍</span>
                     <p className="text-[10px] font-black text-[#ff5a00] uppercase tracking-widest">Önhöz legközelebbi partnerünk</p>
