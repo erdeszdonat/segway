@@ -1,64 +1,130 @@
-import Image from "next/image";
+"use client";
+import { useState, useEffect } from 'react';
 
-export default function Home() {
+export default function SegwayKalkulator() {
+  const [isPartner, setIsPartner] = useState(false);
+  const [eredmeny, setEredmeny] = useState<any>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setIsPartner(params.get('partner') === '1');
+  }, []);
+
+  const szamolas = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const meret = Number(formData.get('meret'));
+    const lejto = Number(formData.get('lejto'));
+    const arnyekolt = formData.get('arnyekolt') === 'igen';
+
+    let modell = "";
+    let link = "";
+    let indoklas = "";
+
+    // LOGIKA A 14 TÍPUSHOZ (Kert mérete, Lejtés és GPS viszonyok alapján)
+    if (meret <= 500) {
+      if (lejto <= 30) {
+        modell = "Segway Navimow i105E";
+        link = "https://robot1.hu/robotfunyirok/segway-navimow/segway-navimow-i105e";
+        indoklas = "Kisebb kertekhez ez a legoptimálisabb választás, beépített kamerás akadályelkerüléssel.";
+      } else {
+        modell = "Segway Navimow H500E";
+        link = "https://robot1.hu/robotfunyirok/segway-navimow/segway-navimow-h500e";
+        indoklas = "Bár a kert kicsi, a meredek lejtő miatt a nagyobb kapaszkodóképességű H-széria szükséges.";
+      }
+    } 
+    else if (meret <= 800) {
+      if (lejto <= 30) {
+        modell = "Segway Navimow i108E";
+        link = "https://robot1.hu/robotfunyirok/segway-navimow/segway-navimow-i108e";
+        indoklas = "Az i-széria nagyobb akkumulátoros változata, tökéletes 800 m²-ig.";
+      } else {
+        modell = "Segway Navimow H800E";
+        link = "https://robot1.hu/robotfunyirok/segway-navimow/segway-navimow-h800e";
+        indoklas = "Meredekebb kertbe a H-széria 800 m²-es típusát javasoljuk.";
+      }
+    }
+    else if (meret <= 1500) {
+      modell = arnyekolt ? "Segway Navimow H1500E + VisionFence" : "Segway Navimow H1500E";
+      link = "https://robot1.hu/robotfunyirok/segway-navimow/segway-navimow-h1500e";
+      indoklas = arnyekolt ? "A magas fák/falak miatt a VisionFence kamera segít a navigációban." : "Nagy teljesítményű gép közepes méretű kertekbe.";
+    }
+    else if (meret <= 3000) {
+      modell = arnyekolt ? "Segway Navimow H3000E + VisionFence" : "Segway Navimow H3000E";
+      link = "https://robot1.hu/robotfunyirok/segway-navimow/segway-navimow-h3000e";
+      indoklas = "A legnagyobb kapacitású modell, amely megbirkózik a legnagyobb területekkel is.";
+    }
+    else {
+      modell = "Ipari megoldás / Több robot";
+      indoklas = "Ekkora területre érdemes több gépben vagy ipari Segway megoldásban gondolkodni.";
+      link = "https://robot1.hu/robotfunyirok/segway-navimow";
+    }
+
+    setEredmeny({ modell, link, indoklas });
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-transparent flex items-center justify-center p-2 font-sans">
+      <main className="w-full max-w-md bg-white shadow-2xl rounded-[2.5rem] overflow-hidden border border-gray-100">
+        
+        <div className="bg-[#ff5a00] p-6 text-white text-center">
+          <h1 className="text-xl font-black uppercase italic">Navimow Szakértő</h1>
+          <p className="text-xs opacity-90">Válaszoljon 4 kérdésre a pontos ajánlathoz!</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+        
+        <form onSubmit={szamolas} className="p-6 space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Kert (m²)</label>
+              <input name="meret" type="number" placeholder="500" required className="w-full p-3 mt-1 bg-gray-50 rounded-xl focus:ring-2 focus:ring-[#ff5a00] outline-none font-bold" />
+            </div>
+            <div>
+              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Lejtő (%)</label>
+              <input name="lejto" type="number" placeholder="25" required className="w-full p-3 mt-1 bg-gray-50 rounded-xl focus:ring-2 focus:ring-[#ff5a00] outline-none font-bold" />
+            </div>
+          </div>
+
+          <div>
+            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Vannak magas fák vagy falak?</label>
+            <select name="arnyekolt" className="w-full p-3 mt-1 bg-gray-50 rounded-xl focus:ring-2 focus:ring-[#ff5a00] outline-none font-bold">
+              <option value="nem">Nincs, nyílt a terep</option>
+              <option value="igen">Igen, sok az árnyékolt rész</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Település</label>
+            <input name="telepules" type="text" placeholder="Pl. Esztergom" required className="w-full p-3 mt-1 bg-gray-50 rounded-xl focus:ring-2 focus:ring-[#ff5a00] outline-none font-bold" />
+          </div>
+
+          <div>
+            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">E-mail cím</label>
+            <input name="email" type="email" placeholder="pelda@email.hu" required className="w-full p-3 mt-1 bg-gray-50 rounded-xl focus:ring-2 focus:ring-[#ff5a00] outline-none font-bold" />
+          </div>
+
+          {isPartner && (
+            <div className="p-3 bg-blue-50 rounded-xl border border-blue-100">
+              <label className="text-[10px] font-bold text-blue-600 uppercase">Telefonszám (Visszahíváshoz)</label>
+              <input name="telefon" type="tel" placeholder="+36 30..." required className="w-full p-2 mt-1 bg-white rounded-lg outline-none font-bold border-none shadow-sm" />
+            </div>
+          )}
+
+          <button type="submit" className="w-full bg-black text-white p-4 rounded-2xl font-black uppercase tracking-widest hover:bg-[#ff5a00] transition-all shadow-lg active:scale-95">
+            Melyik gép kell nekem?
+          </button>
+        </form>
+
+        {eredmeny && (
+          <div className="mx-4 mb-6 p-5 bg-gray-900 rounded-3xl text-white animate-in slide-in-from-bottom-2">
+            <span className="text-[#ff5a00] text-[10px] font-black uppercase">Javasolt modell:</span>
+            <h2 className="text-xl font-black mt-1">{eredmeny.modell}</h2>
+            <p className="text-xs text-gray-400 mt-2 leading-relaxed">{eredmeny.indoklas}</p>
+            
+            <a href={eredmeny.link} target="_blank" className="inline-block mt-4 bg-white text-black px-5 py-2 rounded-lg font-bold text-xs hover:bg-[#ff5a00] hover:text-white transition-colors">
+              Megnézem a Robot1.hu-n
+            </a>
+          </div>
+        )}
       </main>
     </div>
   );
