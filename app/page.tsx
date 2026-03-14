@@ -5,6 +5,7 @@ export default function SegwayKalkulator() {
   const [isPartner, setIsPartner] = useState(false);
   const [eredmeny, setEredmeny] = useState<any>(null);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -64,9 +65,23 @@ export default function SegwayKalkulator() {
     // Animáció indítása
     setIsAnimating(true);
     setEredmeny(null);
+    setProgress(0);
+
+    // Százalékos számláló (0-100% kipörgetése)
+    let currentProgress = 0;
+    const progressInterval = setInterval(() => {
+      currentProgress += 1;
+      if (currentProgress <= 100) {
+        setProgress(currentProgress);
+      }
+      if (currentProgress >= 100) {
+        clearInterval(progressInterval);
+      }
+    }, 44); // 44ms * 100 = ~4.4 másodperc alatt ér a végére
 
     // 4.5 másodperc múlva jelenik meg az eredmény ablak
     setTimeout(() => {
+      clearInterval(progressInterval);
       setIsAnimating(false);
       setEredmeny({ modell, link, indoklas });
     }, 4500); 
@@ -202,8 +217,8 @@ export default function SegwayKalkulator() {
           {/* Háttér rács */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#22c55e22_1px,transparent_1px),linear-gradient(to_bottom,#22c55e22_1px,transparent_1px)] bg-[size:4rem_4rem] [transform:perspective(500px)_rotateX(60deg)] origin-bottom animate-[grid-move_2s_linear_infinite] opacity-60"></div>
           
-          <h2 className="absolute top-20 text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 uppercase tracking-widest animate-pulse drop-shadow-[0_0_15px_rgba(250,204,21,0.5)] text-center px-4">
-            Már mutatjuk is az önnek legalkalmasabb Navimow-ot!
+          <h2 className="absolute top-20 text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 uppercase tracking-widest animate-pulse drop-shadow-[0_0_15px_rgba(250,204,21,0.5)] text-center px-4">
+            Ideális Navimow keresése...
           </h2>
 
           {/* Versenypálya / Kert */}
@@ -252,6 +267,13 @@ export default function SegwayKalkulator() {
               </div>
             </div>
 
+          </div>
+
+          {/* Százalék jelző */}
+          <div className="absolute bottom-6 left-0 w-full text-center z-50">
+            <span className="text-[#ff5a00] font-black text-3xl md:text-4xl tracking-widest drop-shadow-[0_0_15px_rgba(255,90,0,0.8)]">
+              {progress}%
+            </span>
           </div>
 
           {/* Töltőcsík alul */}
