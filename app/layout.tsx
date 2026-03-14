@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Navimow Szakértő | Robotfűnyíró Kalkulátor',
     description: 'Találja meg a kertjéhez tökéletes Segway Navimow robotfűnyírót másodpercek alatt!',
-    images: ['/hatter.jpg'], // Ez a kép jelenik meg, ha megosztod Facebookon/Messengeren!
+    images: ['/hatter.jpg'],
     locale: 'hu_HU',
     type: 'website',
   },
