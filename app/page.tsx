@@ -211,118 +211,41 @@ export default function SegwayKalkulator() {
         </div>
       )}
 
-      {/* --- RETRO NEON VERSENY ANIMÁCIÓ (Fűnyírással, kerülgetéssel) --- */}
+      {/* --- PRÉMIUM ELEMZŐ ANIMÁCIÓ --- */}
       {isAnimating && (
-        <div className="fixed inset-0 z-[100] bg-gray-950 flex flex-col items-center justify-center overflow-hidden">
-          {/* Háttér rács */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#22c55e22_1px,transparent_1px),linear-gradient(to_bottom,#22c55e22_1px,transparent_1px)] bg-[size:4rem_4rem] [transform:perspective(500px)_rotateX(60deg)] origin-bottom animate-[grid-move_2s_linear_infinite] opacity-60"></div>
-          
-          <h2 className="absolute top-20 text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 uppercase tracking-widest animate-pulse drop-shadow-[0_0_15px_rgba(250,204,21,0.5)] text-center px-4">
-            Ideális Navimow keresése...
-          </h2>
-
-          {/* Versenypálya / Kert */}
-          <div className="relative w-full h-80 border-y-4 border-green-500/30 flex flex-col justify-evenly bg-gray-900/80 backdrop-blur-sm overflow-hidden shadow-[inset_0_0_50px_rgba(34,197,94,0.1)]">
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-300">
+          <div className="flex flex-col items-center max-w-lg w-full animate-in slide-in-from-bottom-4 duration-500">
             
-            {/* --- 1. Sáv: Neon Kék (Nekimegy a falnak) --- */}
-            <div className="relative w-full h-12">
-              {/* Piros téglafal akadály */}
-              <div className="absolute top-1 left-[45%] w-8 h-10 bg-red-500/80 border-2 border-red-400 rounded shadow-[0_0_20px_#ef4444] flex flex-col justify-between p-1 z-20">
-                <div className="w-full h-1 bg-red-900/50"></div>
-                <div className="w-full h-1 bg-red-900/50"></div>
-              </div>
-              {/* Kék robot */}
-              <div className="absolute top-1 left-0 w-24 h-10 bg-gray-800 rounded-lg border-2 border-cyan-400 shadow-[0_0_20px_#22d3ee] animate-[race-crash_4.5s_ease-in-out_forwards] z-30">
-                <div className="absolute top-1 right-1 w-4 h-2 bg-cyan-200 rounded-full shadow-[0_0_10px_#22d3ee]"></div>
-              </div>
+            {/* Szofisztikált GPS / Radar betöltő */}
+            <div className="relative w-24 h-24 mb-8 flex items-center justify-center">
+              <div className="absolute inset-0 border-4 border-white/10 rounded-full"></div>
+              <div className="absolute inset-0 border-4 border-[#ff5a00] rounded-full border-t-transparent animate-spin"></div>
+              <div className="absolute w-10 h-10 bg-[#ff5a00]/20 rounded-full animate-ping"></div>
+              <svg className="w-8 h-8 text-[#ff5a00] relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
             </div>
 
-            {/* --- 2. Sáv: Neon Sárga (A NYERTES - Kikerüli a fát és lenyírja a füvet) --- */}
-            <div className="relative w-full h-12 z-40">
-              {/* Zöld neon fa akadály */}
-              <div className="absolute top-1 left-[35%] text-4xl drop-shadow-[0_0_15px_#22c55e] z-20">🌲</div>
-              
-              {/* Lenyírt fű nyomvonal (zöld sáv ami követi a robotot) */}
-              <div className="absolute top-2 left-0 h-8 bg-green-500/40 border-y border-green-400/50 shadow-[0_0_15px_#22c55e] rounded-r-full animate-[mow-trail_4.5s_ease-in-out_forwards] z-10"></div>
-              
-              {/* Sárga nyertes robot (kikerüli a fát) */}
-              <div className="absolute top-1 left-0 w-24 h-10 bg-gray-800 rounded-xl border-2 border-yellow-400 shadow-[0_0_30px_#facc15] animate-[race-winner-dodge_4.5s_ease-in-out_forwards] z-30">
-                <div className="absolute -bottom-2 left-2 w-6 h-6 border-2 border-yellow-400 rounded-full bg-black shadow-[0_0_10px_#facc15]"></div>
-                <div className="absolute -bottom-2 right-2 w-7 h-7 border-2 border-yellow-400 rounded-full bg-black shadow-[0_0_10px_#facc15]"></div>
-                <div className="absolute top-1 right-2 w-6 h-2 bg-yellow-200 rounded-full shadow-[0_0_15px_#facc15]"></div>
-                {/* Villogó Navimow radar tetején */}
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-4 h-4 bg-orange-500 rounded-full animate-ping"></div>
-              </div>
-            </div>
+            <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-widest text-center mb-8 drop-shadow-lg">
+              Ideális Navimow keresése...
+            </h2>
 
-            {/* --- 3. Sáv: Neon Rózsaszín (Elakad a magas fűben) --- */}
-            <div className="relative w-full h-12">
-              {/* Magas fű akadály */}
-              <div className="absolute top-0 left-[60%] w-32 h-12 border-l-4 border-r-4 border-green-700/80 repeating-linear-gradient-to-r from-green-800 to-green-600 z-20 opacity-70">
-                 <div className="text-green-400 tracking-widest font-bold mt-2 opacity-50 text-center">||||||||</div>
+            {/* Elegáns Százalék és Töltőcsík Kártya */}
+            <div className="w-full bg-white/10 p-6 md:p-8 rounded-3xl border border-white/20 backdrop-blur-xl shadow-2xl">
+              <div className="flex justify-between items-end mb-4">
+                <span className="text-xs font-bold text-gray-300 uppercase tracking-widest">Kerti adatok elemzése</span>
+                <span className="text-4xl font-black text-[#ff5a00] drop-shadow-md">{progress}%</span>
               </div>
-              {/* Rózsaszín robot */}
-              <div className="absolute top-1 left-0 w-24 h-10 bg-gray-800 rounded-lg border-2 border-pink-500 shadow-[0_0_20px_#ec4899] animate-[race-stuck_4.5s_ease-in-out_forwards] z-30">
-                <div className="absolute top-1 right-1 w-4 h-2 bg-pink-200 rounded-full shadow-[0_0_10px_#ec4899]"></div>
+              <div className="w-full h-3 bg-black/40 rounded-full overflow-hidden shadow-inner">
+                <div 
+                  className="h-full bg-gradient-to-r from-[#ff5a00] to-orange-400 rounded-full transition-all duration-[50ms] ease-linear"
+                  style={{ width: `${progress}%` }}
+                ></div>
               </div>
             </div>
 
           </div>
-
-          {/* Százalék jelző */}
-          <div className="absolute bottom-6 left-0 w-full text-center z-50">
-            <span className="text-[#ff5a00] font-black text-3xl md:text-4xl tracking-widest drop-shadow-[0_0_15px_rgba(255,90,0,0.8)]">
-              {progress}%
-            </span>
-          </div>
-
-          {/* Töltőcsík alul */}
-          <div className="absolute bottom-0 left-0 w-full h-3 bg-gray-900">
-            <div className="h-full bg-[#ff5a00] shadow-[0_0_20px_#ff5a00] animate-[load-bar_4.5s_linear_forwards]"></div>
-          </div>
-
-          <style>{`
-            @keyframes grid-move {
-              0% { background-position: 0 0; }
-              100% { background-position: 0 4rem; }
-            }
-            @keyframes load-bar {
-              0% { width: 0%; }
-              100% { width: 100%; }
-            }
-            /* Sárga Nyertes: Kikerüli a fát (felugrik, visszamegy), majd elhúz */
-            @keyframes race-winner-dodge {
-              0% { transform: translate(-150px, 0); }
-              25% { transform: translate(calc(35vw - 100px), 0); }
-              35% { transform: translate(calc(35vw - 50px), -40px) rotate(-10deg); } /* Kikerülés fel */
-              45% { transform: translate(calc(35vw + 50px), -40px) rotate(10deg); }
-              55% { transform: translate(calc(35vw + 100px), 0) rotate(0deg); } /* Visszatérés a sávba */
-              100% { transform: translate(120vw, 0); }
-            }
-            /* Lenyírt fű nyomvonal (követi a sárga robotot) */
-            @keyframes mow-trail {
-              0% { width: 0; }
-              25% { width: calc(35vw - 50px); }
-              55% { width: calc(35vw + 100px); }
-              100% { width: 120vw; }
-            }
-            /* Kék: Nekimegy a falnak és megáll */
-            @keyframes race-crash {
-              0% { transform: translate(-150px, 0); }
-              35% { transform: translate(calc(45vw - 110px), 0); }
-              38% { transform: translate(calc(45vw - 110px), -5px); } /* Ütközés rázkódás */
-              40% { transform: translate(calc(45vw - 110px), 5px); }
-              42% { transform: translate(calc(45vw - 110px), 0); }
-              100% { transform: translate(calc(45vw - 110px), 0); }
-            }
-            /* Rózsaszín: Belassul és elakad a fűben */
-            @keyframes race-stuck {
-              0% { transform: translate(-150px, 0); }
-              40% { transform: translate(calc(60vw - 50px), 0); }
-              60% { transform: translate(calc(60vw - 10px), 0); } /* Lelassul */
-              100% { transform: translate(calc(60vw), 0); } /* Megáll */
-            }
-          `}</style>
         </div>
       )}
     </div>
