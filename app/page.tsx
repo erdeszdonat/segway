@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 export default function SegwayKalkulator() {
   const [isPartner, setIsPartner] = useState(false);
   const [eredmeny, setEredmeny] = useState<any>(null);
+  const [isAnimating, setIsAnimating] = useState(false); // ÚJ: Animáció állapota
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -60,7 +61,14 @@ export default function SegwayKalkulator() {
       link = "https://robot1.hu/robotfunyirok/segway-navimow";
     }
 
-    setEredmeny({ modell, link, indoklas });
+    // Animáció indítása, és az eredmény késleltetett megjelenítése
+    setIsAnimating(true);
+    setEredmeny(null); // Eltüntetjük az előző eredményt, ha volt
+
+    setTimeout(() => {
+      setIsAnimating(false);
+      setEredmeny({ modell, link, indoklas });
+    }, 4500); // 4.5 másodperc múlva mutatja meg az eredményt (amikor a verseny véget ér)
   };
 
   return (
@@ -184,6 +192,77 @@ export default function SegwayKalkulator() {
           </div>
         )}
       </main>
+
+      {/* --- RETRO NEON VERSENY ANIMÁCIÓ --- */}
+      {isAnimating && (
+        <div className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center overflow-hidden">
+          {/* Retro rácsos háttér */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#db277733_1px,transparent_1px),linear-gradient(to_bottom,#db277733_1px,transparent_1px)] bg-[size:4rem_4rem] [transform:perspective(500px)_rotateX(60deg)] origin-bottom animate-[grid-move_2s_linear_infinite] opacity-50"></div>
+          
+          <h2 className="absolute top-20 text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 uppercase tracking-[0.3em] animate-pulse italic drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]">
+            Algoritmus Fut...
+          </h2>
+
+          {/* Versenypálya */}
+          <div className="relative w-full h-80 border-y-4 border-pink-500/30 flex flex-col justify-evenly bg-gray-900/50 backdrop-blur-sm overflow-hidden shadow-[inset_0_0_50px_rgba(219,39,119,0.3)]">
+            
+            {/* 1. Versenyző: Neon Kék (Vesztes) */}
+            <div className="absolute w-24 h-10 bg-gray-800 rounded-t-2xl rounded-b-lg border-2 border-cyan-400 shadow-[0_0_20px_#22d3ee] animate-[race-loser-1_4.5s_ease-in-out_forwards]">
+              <div className="absolute -bottom-3 left-2 w-6 h-6 border-2 border-cyan-400 rounded-full bg-black"></div>
+              <div className="absolute -bottom-3 right-2 w-7 h-7 border-2 border-cyan-400 rounded-full bg-black"></div>
+              <div className="absolute top-2 right-1 w-4 h-1.5 bg-cyan-200 rounded-full shadow-[0_0_10px_#22d3ee]"></div>
+            </div>
+
+            {/* 2. Versenyző: Neon Sárga (A NYERTES - Középen) */}
+            <div className="absolute w-24 h-10 bg-gray-800 rounded-t-2xl rounded-b-lg border-2 border-yellow-400 shadow-[0_0_30px_#facc15] z-10 animate-[race-winner_4.5s_ease-in-out_forwards] mt-24">
+              <div className="absolute -bottom-3 left-2 w-6 h-6 border-2 border-yellow-400 rounded-full bg-black shadow-[0_0_10px_#facc15]"></div>
+              <div className="absolute -bottom-3 right-2 w-7 h-7 border-2 border-yellow-400 rounded-full bg-black shadow-[0_0_10px_#facc15]"></div>
+              <div className="absolute top-2 right-1 w-4 h-1.5 bg-yellow-200 rounded-full shadow-[0_0_15px_#facc15]"></div>
+              {/* Sebességvonalak a nyertes mögött */}
+              <div className="absolute top-1/2 -left-12 w-10 h-0.5 bg-yellow-400/80 rounded-full shadow-[0_0_5px_#facc15]"></div>
+              <div className="absolute top-1/4 -left-16 w-12 h-0.5 bg-yellow-400/60 rounded-full shadow-[0_0_5px_#facc15]"></div>
+            </div>
+
+            {/* 3. Versenyző: Neon Rózsaszín (Vesztes) */}
+            <div className="absolute w-24 h-10 bg-gray-800 rounded-t-2xl rounded-b-lg border-2 border-pink-500 shadow-[0_0_20px_#ec4899] animate-[race-loser-2_4.5s_ease-in-out_forwards] mt-48">
+              <div className="absolute -bottom-3 left-2 w-6 h-6 border-2 border-pink-500 rounded-full bg-black"></div>
+              <div className="absolute -bottom-3 right-2 w-7 h-7 border-2 border-pink-500 rounded-full bg-black"></div>
+              <div className="absolute top-2 right-1 w-4 h-1.5 bg-pink-200 rounded-full shadow-[0_0_10px_#ec4899]"></div>
+            </div>
+
+          </div>
+
+          <p className="absolute bottom-10 text-pink-500 font-bold tracking-[0.5em] text-sm animate-pulse">
+            TÖKÉLETES GÉP KERESÉSE...
+          </p>
+
+          <style>{`
+            @keyframes grid-move {
+              0% { background-position: 0 0; }
+              100% { background-position: 0 4rem; }
+            }
+            @keyframes race-winner {
+              0% { transform: translateX(-150px); }
+              20% { transform: translateX(calc(30vw - 50px)); }
+              60% { transform: translateX(calc(40vw - 50px)); }
+              80% { transform: translateX(calc(50vw - 50px)); }
+              100% { transform: translateX(120vw); }
+            }
+            @keyframes race-loser-1 {
+              0% { transform: translateX(-150px); }
+              30% { transform: translateX(calc(45vw - 50px)); }
+              70% { transform: translateX(calc(30vw - 50px)); }
+              100% { transform: translateX(-200px); }
+            }
+            @keyframes race-loser-2 {
+              0% { transform: translateX(-150px); }
+              40% { transform: translateX(calc(35vw - 50px)); }
+              60% { transform: translateX(calc(45vw - 50px)); }
+              100% { transform: translateX(-200px); }
+            }
+          `}</style>
+        </div>
+      )}
     </div>
   );
 }
