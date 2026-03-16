@@ -22,6 +22,7 @@ export async function POST(request: Request) {
           <h3 style="margin-top: 0;">Az Önnek javasolt gép: <span style="color: #ff5a00;">${ajanlott_modell}</span></h3>
           <p><strong>A megadott kert adatai:</strong></p>
           <ul>
+            <li><strong>Eredetileg beírt e-mail:</strong> ${email}</li>
             <li><strong>Település:</strong> ${telepules}</li>
             <li><strong>Kert mérete:</strong> ${meret} m²</li>
             <li><strong>Max. lejtő:</strong> ${lejto}%</li>
@@ -34,11 +35,11 @@ export async function POST(request: Request) {
       </div>
     `;
 
-    // TESZT MÓD BEÁLLÍTÁSA:
+    // HIVATALOS RESEND TESZT MÓD BEÁLLÍTÁSA:
     const data = await resend.emails.send({
-      from: 'onboarding@resend.dev', // Ez marad így a teszthez
-      to: [email],
-      subject: 'A Te Segway Navimow javaslatod (TESZT)',
+      from: 'onboarding@resend.dev',
+      to: ['delivered@resend.dev'], // <-- MOST IDE KÜLDI, HOGY LÁSSUK AZ EREDMÉNYT A RESENDBEN!
+      subject: 'A Te Segway Navimow javaslatod (HIVATALOS TESZT)',
       html: emailHtml,
     });
 
