@@ -2,9 +2,14 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
 export async function POST(request: Request) {
-  const resend = new Resend(process.env.RESEND_API_KEY);
-
   try {
+    // 1. Biztonsági ellenőrzés: Látja egyáltalán a Vercel a kulcsot?
+    if (!process.env.RESEND_API_KEY) {
+      console.error("HIBA: Hiányzik a RESEND_API_KEY a Vercelből!");
+      return NextResponse.json({ success: false, error: "Missing API Key" }, { status: 500 });
+    }
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const body = await request.json();
     const { email, telepules, meret, lejto, arnyekolt, ajanlott_modell, kereskedo_neve } = body;
 
@@ -31,14 +36,23 @@ export async function POST(request: Request) {
 
     // TESZT MÓD BEÁLLÍTÁSA:
     const data = await resend.emails.send({
-      from: 'onboarding@resend.dev', // <-- Ez a Resend kötelező teszt feladója
-      to: [email], // <-- IDE CSAK A TE SAJÁT RESEND REGISZTRÁCIÓS CÍMED KERÜLHET!
+      from: 'onboarding@resend.dev', // Ez marad így a teszthez
+      to: [email],
       subject: 'A Te Segway Navimow javaslatod (TESZT)',
       html: emailHtml,
     });
 
+    // Ha a Resend API hibát dob vissza
+    if (data.error) {
+      console.error("RESEND API HIBA:", data.error);
+      return NextResponse.json({ success: false, error: data.error }, { status: 400 });
+    }
+
+    console.log("SIKERES KÜLDÉS:", data);
     return NextResponse.json({ success: true, data });
+
   } catch (error) {
-    return NextResponse.json({ success: false, error });
+    console.error("VÁRATLAN SZERVER HIBA:", error);
+    return NextResponse.json({ success: false, error: String(error) }, { status: 500 });
   }
 }
