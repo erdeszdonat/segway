@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 
-// --- KERESKEDŐK LISTÁJA (A CSV ADATOK ALAPJÁN) ---
+// --- KERESKEDŐK LISTÁJA ---
 const KERESKEDOK = [
   { slug: "andl-papa", nev: "ANDL Kft.", varos: "Pápa", cim: "8500 Pápa, Külső-Veszprémi út 64", lat: 47.330, lon: 17.460, telefon: "+36307803644" },
   { slug: "andl-gyor", nev: "ANDL Kft.", varos: "Győr", cim: "9024 Győr, Pápai út 22.", lat: 47.683, lon: 17.635, telefon: "+36305431437" },
@@ -86,6 +86,7 @@ export default function App() {
 
     setIsCheckingCity(false);
 
+    // --- KALKULÁCIÓS LOGIKA PONTOS URL-EKKEL ---
     let modell = "";
     let indoklas = "";
     let link = "";
@@ -151,14 +152,14 @@ export default function App() {
     <div className="min-h-screen relative flex items-center justify-center p-2 font-sans bg-cover bg-fixed transition-all duration-700" 
       style={{ 
         backgroundImage: "url('https://segwayrobotfunyiro.hu/media/bg/segway-navimow-x3.jpg')",
-        backgroundPosition: "right 15% center" // A robot így látszódni fog asztali gépen
+        backgroundPosition: "right 15% center"
       }}>
       
       <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]"></div>
 
       <main className="relative z-10 w-full max-w-2xl bg-white/95 backdrop-blur-3xl shadow-[0_30px_100px_-10px_rgba(0,0,0,0.5)] rounded-[2.5rem] overflow-hidden border border-white/40">
         
-        {/* --- KOMPAKT VILÁGOSSZÜRKE FEJLÉC --- */}
+        {/* --- FEJLÉC --- */}
         <div className="bg-gray-100 p-4 md:p-5 text-center border-b border-gray-200 relative">
           <div className="flex justify-center mb-3">
                <img 
@@ -172,7 +173,7 @@ export default function App() {
           <h1 className="text-xl md:text-3xl font-black uppercase tracking-tighter italic text-gray-950">
             Robotfűnyíró Kalkulátor
           </h1>
-          <p className="mt-1 text-gray-500 font-bold text-[10px] md:text-xs max-w-md mx-auto leading-tight opacity-90">
+          <p className="mt-1 text-gray-500 font-bold text-[10px] md:text-xs max-w-md mx-auto leading-tight">
             Találja meg a tökéletes Segway Navimow robotfűnyírót másodpercek alatt!
           </p>
         </div>
@@ -202,15 +203,21 @@ export default function App() {
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">GPS árnyékoltság (Kerti adottság)</label>
               <div className="grid grid-cols-2 gap-4">
                 <div onClick={() => setArnyekoltValue("nem")}
-                  className={`cursor-pointer border-2 rounded-2xl p-4 flex items-center gap-4 transition-all duration-300 ${arnyekoltValue === 'nem' ? 'border-orange-500 bg-orange-50 shadow-md' : 'border-gray-100 bg-white hover:border-gray-200 shadow-sm'}`}>
+                  className={`cursor-pointer border-2 rounded-2xl p-3 md:p-4 flex items-center gap-4 transition-all duration-300 ${arnyekoltValue === 'nem' ? 'border-orange-500 bg-orange-50 shadow-md' : 'border-gray-100 bg-white hover:border-gray-200 shadow-sm'}`}>
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-2xl ${arnyekoltValue === 'nem' ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-400'}`}>☀️</div>
-                  <div className="font-black text-xs text-gray-900 uppercase tracking-tighter">Tiszta</div>
+                  <div>
+                    <div className="font-black text-[10px] md:text-xs text-gray-900 uppercase">Tiszta</div>
+                    <div className="text-[8px] md:text-[10px] text-gray-400 font-bold leading-tight">Nyílt égbolt, jó rálátás</div>
+                  </div>
                 </div>
 
                 <div onClick={() => setArnyekoltValue("igen")}
-                  className={`cursor-pointer border-2 rounded-2xl p-4 flex items-center gap-4 transition-all duration-300 ${arnyekoltValue === 'igen' ? 'border-orange-500 bg-orange-50 shadow-md' : 'border-gray-100 bg-white hover:border-gray-200 shadow-sm'}`}>
+                  className={`cursor-pointer border-2 rounded-2xl p-3 md:p-4 flex items-center gap-4 transition-all duration-300 ${arnyekoltValue === 'igen' ? 'border-orange-500 bg-orange-50 shadow-md' : 'border-gray-100 bg-white hover:border-gray-200 shadow-sm'}`}>
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-2xl ${arnyekoltValue === 'igen' ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-400'}`}>🌳</div>
-                  <div className="font-black text-xs text-gray-900 uppercase tracking-tighter">Zárt</div>
+                  <div>
+                    <div className="font-black text-[10px] md:text-xs text-gray-900 uppercase">Zárt</div>
+                    <div className="text-[8px] md:text-[10px] text-gray-400 font-bold leading-tight">Fák, falak, árnyékos</div>
+                  </div>
                 </div>
               </div>
               <input type="hidden" name="arnyekolt" value={arnyekoltValue} />
@@ -253,29 +260,29 @@ export default function App() {
         </form>
       </main>
 
-      {/* --- EREDMÉNY MODAL (GÖRGETHETŐ ÉS MEGFELELŐ MÉRETŰ) --- */}
+      {/* --- EREDMÉNY MODAL --- */}
       {eredmeny && !isAnimating && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in duration-300 overflow-y-auto">
           <div className="relative w-full max-w-xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500 my-auto max-h-[90vh] flex flex-col border border-white/20">
             
-            {/* --- JAVÍTOTT X GOMB: MINDIG LÁTSZIK ÉS KONTRASZTOS --- */}
             <button 
               onClick={() => setEredmeny(null)} 
               className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-black/50 text-white rounded-full font-bold z-[210] hover:bg-black transition-colors"
             >✕</button>
 
             <div className="overflow-y-auto flex-1">
-              <div className="bg-orange-600 p-10 text-center text-white relative">
+              <div className="bg-orange-600 p-8 md:p-10 text-center text-white relative">
                 <span className="inline-block bg-white/20 px-5 py-1.5 rounded-full text-[11px] font-black uppercase tracking-[0.2em] mb-4">Kalkulált eredmény</span>
-                <h2 className="text-4xl md:text-5xl font-black tracking-tighter italic drop-shadow-lg">{eredmeny.modell}</h2>
+                <h2 className="text-3xl md:text-5xl font-black tracking-tighter italic drop-shadow-lg">{eredmeny.modell}</h2>
               </div>
               
               <div className="p-8 md:p-12 text-center">
                 <p className="text-gray-700 font-bold leading-relaxed text-xl mb-10">{eredmeny.indoklas}</p>
                 
                 <div className="space-y-4">
+                  {/* TERMÉK LINK GOMB - MOST MÁR A PONTOS URL-RE VISZ */}
                   <a href={eredmeny.link} target="_blank" rel="noreferrer" 
-                    className="w-full flex items-center justify-center gap-4 px-8 py-5 bg-orange-500 text-white rounded-2xl font-black text-xl uppercase tracking-widest hover:bg-orange-600 shadow-xl transform active:scale-[0.98] transition-all">
+                    className="w-full flex items-center justify-center gap-4 px-8 py-5 bg-[#ff5a00] text-white rounded-2xl font-black text-xl uppercase tracking-widest hover:bg-orange-600 shadow-xl transform active:scale-[0.98] transition-all">
                     Megtekintem a terméket
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -283,7 +290,7 @@ export default function App() {
                   </a>
 
                   {eredmeny.kereskedo && (
-                    <div className="p-6 bg-gray-50 rounded-[2rem] border-2 border-gray-100 text-left shadow-inner">
+                    <div className="p-6 bg-gray-50 rounded-[2rem] border-2 border-gray-100 text-left shadow-inner mt-4">
                       <p className="text-[10px] font-black text-orange-600 uppercase mb-2 flex items-center gap-2 italic tracking-widest">
                          📍 Legközelebbi szakkereskedő
                       </p>
@@ -293,7 +300,6 @@ export default function App() {
                         {eredmeny.tavolsag !== null && <span className="text-orange-600 ml-2">(~{eredmeny.tavolsag} km)</span>}
                       </p>
                       
-                      {/* --- ÚTVONALTERVEZÉS ÉS HÍVÁS GOMBOK --- */}
                       <div className="grid grid-cols-2 gap-3 mt-5">
                           <a href={`https://www.google.com/maps/dir/?api=1&destination=${eredmeny.kereskedo.lat},${eredmeny.kereskedo.lon}`} target="_blank" rel="noreferrer" className="bg-white border border-gray-200 py-3 rounded-xl text-center text-xs font-black uppercase tracking-widest hover:border-orange-500 transition-all shadow-sm text-gray-900">Útvonal</a>
                           <a href={`tel:${eredmeny.kereskedo.telefon}`} className="bg-gray-950 text-white py-3 rounded-xl text-center text-xs font-black uppercase tracking-widest hover:bg-black transition-all shadow-md">Hívás indítása</a>
@@ -307,7 +313,7 @@ export default function App() {
         </div>
       )}
 
-      {/* --- PRÉMIUM ANIMÁCIÓ --- */}
+      {/* --- ANIMÁCIÓ --- */}
       {isAnimating && (
         <div className="fixed inset-0 z-[100] bg-gray-950/90 backdrop-blur-xl flex flex-col items-center justify-center p-8 text-center">
           <div className="relative w-32 h-32 mb-10">
