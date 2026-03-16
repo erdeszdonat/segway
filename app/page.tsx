@@ -151,7 +151,8 @@ export default function App() {
   return (
     <div className="min-h-screen relative flex items-center justify-center p-2 font-sans bg-cover bg-fixed transition-all duration-700" 
       style={{ 
-        backgroundImage: "url('https://segwayrobotfunyiro.hu/media/bg/segway-navimow-x3.jpg')",
+        // --- ITT TÖRTÉNT A CSERE: MOST MÁR A HELYI FÁJLT HASZNÁLJA ---
+        backgroundImage: "url('/segwayhatter.jpg')",
         backgroundPosition: "right 15% center"
       }}>
       
@@ -165,7 +166,6 @@ export default function App() {
                <img 
                  src="/logo.svg" 
                  alt="Segway Navimow Logo" 
-                 // --- LOGÓ MÉRETE NÖVELVE 3X ---
                  className="h-40 md:h-[200px] w-auto max-w-full object-contain"
                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
                />
