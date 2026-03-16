@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 
-// --- KERESKEDŐK LISTÁJA ---
+// --- KERESKEDŐK LISTÁJA (A CSV ADATOK ALAPJÁN) ---
 const KERESKEDOK = [
   { slug: "andl-papa", nev: "ANDL Kft.", varos: "Pápa", cim: "8500 Pápa, Külső-Veszprémi út 64", lat: 47.330, lon: 17.460, telefon: "+36307803644" },
   { slug: "andl-gyor", nev: "ANDL Kft.", varos: "Győr", cim: "9024 Győr, Pápai út 22.", lat: 47.683, lon: 17.635, telefon: "+36305431437" },
@@ -165,7 +165,8 @@ export default function App() {
                <img 
                  src="/logo.svg" 
                  alt="Segway Navimow Logo" 
-                 className="h-14 md:h-18 w-auto object-contain"
+                 // --- LOGÓ MÉRETE NÖVELVE 3X ---
+                 className="h-40 md:h-[200px] w-auto max-w-full object-contain"
                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
                />
           </div>
