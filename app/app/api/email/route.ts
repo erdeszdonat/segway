@@ -2,14 +2,12 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
 export async function POST(request: Request) {
-  // 1. A Resendet ITT, a függvényen BELÜL inicializáljuk! Így a Vercel nem áll le hibával a telepítésnél.
   const resend = new Resend(process.env.RESEND_API_KEY);
 
   try {
     const body = await request.json();
     const { email, telepules, meret, lejto, arnyekolt, ajanlott_modell, kereskedo_neve } = body;
 
-    // E-mail tartalma (HTML formátumban)
     const emailHtml = `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
         <h2 style="color: #ff5a00;">Kedves Érdeklődő!</h2>
@@ -31,11 +29,11 @@ export async function POST(request: Request) {
       </div>
     `;
 
-    // Levél küldése
+    // TESZT MÓD BEÁLLÍTÁSA:
     const data = await resend.emails.send({
-      from: 'Navimow Kalkulátor <kalkulator@te-domained.hu>', // FONTOS: Ezt majd írd át a Resend-ben hitelesített e-mail címedre!
-      to: [email, 'info@robot.hu'], // Elmegy a vevőnek és neked is egyszerre
-      subject: 'A Te Segway Navimow javaslatod',
+      from: 'onboarding@resend.dev', // <-- Ez a Resend kötelező teszt feladója
+      to: [email], // <-- IDE CSAK A TE SAJÁT RESEND REGISZTRÁCIÓS CÍMED KERÜLHET!
+      subject: 'A Te Segway Navimow javaslatod (TESZT)',
       html: emailHtml,
     });
 
