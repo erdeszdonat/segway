@@ -54,6 +54,7 @@ export default function App() {
     const meret = Number(formData.get('meret'));
     const lejto = Number(formData.get('lejto'));
     const telepules = formData.get('telepules') as string;
+    const email = formData.get('email') as string;
 
     setIsCheckingCity(true);
     setCityError("");
@@ -86,7 +87,7 @@ export default function App() {
 
     setIsCheckingCity(false);
 
-    // --- KALKULÁCIÓS LOGIKA PONTOS URL-EKKEL ---
+    // --- KALKULÁCIÓS LOGIKA PONTOS URL-EKKEL (i105 nélkül) ---
     let modell = "";
     let indoklas = "";
     let link = "";
@@ -130,6 +131,25 @@ export default function App() {
       link = "https://segwayrobotfunyiro.hu/robotfunyiro/segway-navimow-x450e-rb1aa-12-06-03-0001.html";
     }
 
+    // --- RESEND E-MAIL KÜLDÉS ---
+    try {
+      fetch("/api/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email,
+          telepules: telepules,
+          meret: meret,
+          lejto: lejto,
+          arnyekolt: arnyekoltValue,
+          ajanlott_modell: modell,
+          kereskedo_neve: nearestKereskedo.nev,
+        })
+      });
+    } catch (error) {
+      console.error("Hiba az e-mail küldésekor:", error);
+    }
+
     setIsAnimating(true);
     setEredmeny(null);
     setProgress(0);
@@ -151,7 +171,6 @@ export default function App() {
   return (
     <div className="min-h-screen relative flex items-center justify-center p-2 font-sans bg-cover bg-fixed transition-all duration-700" 
       style={{ 
-        // --- ITT TÖRTÉNT A CSERE: MOST MÁR A HELYI FÁJLT HASZNÁLJA ---
         backgroundImage: "url('/segwayhatter.jpg')",
         backgroundPosition: "right 15% center"
       }}>
@@ -281,7 +300,6 @@ export default function App() {
                 <p className="text-gray-700 font-bold leading-relaxed text-xl mb-10">{eredmeny.indoklas}</p>
                 
                 <div className="space-y-4">
-                  {/* TERMÉK LINK GOMB - MOST MÁR A PONTOS URL-RE VISZ */}
                   <a href={eredmeny.link} target="_blank" rel="noreferrer" 
                     className="w-full flex items-center justify-center gap-4 px-8 py-5 bg-[#ff5a00] text-white rounded-2xl font-black text-xl uppercase tracking-widest hover:bg-orange-600 shadow-xl transform active:scale-[0.98] transition-all">
                     Megtekintem a terméket
