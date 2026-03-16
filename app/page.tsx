@@ -87,7 +87,7 @@ export default function App() {
 
     setIsCheckingCity(false);
 
-    // --- KALKULÁCIÓS LOGIKA PONTOS URL-EKKEL (i105 nélkül) ---
+    // --- KALKULÁCIÓS LOGIKA (i105 nélkül) ---
     let modell = "";
     let indoklas = "";
     let link = "";
@@ -131,9 +131,10 @@ export default function App() {
       link = "https://segwayrobotfunyiro.hu/robotfunyiro/segway-navimow-x450e-rb1aa-12-06-03-0001.html";
     }
 
-    // --- RESEND E-MAIL KÜLDÉS ---
+    // --- RESEND E-MAIL KÜLDÉS API HÍVÁS ---
+    console.log("E-mail küldés indítása a szerver felé...");
     try {
-      fetch("/api/email", {
+      const response = await fetch("/api/email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -146,10 +147,13 @@ export default function App() {
           kereskedo_neve: nearestKereskedo.nev,
         })
       });
+      const responseData = await response.json();
+      console.log("A szerver válasza:", responseData);
     } catch (error) {
       console.error("Hiba az e-mail küldésekor:", error);
     }
 
+    // --- ANIMÁCIÓ ---
     setIsAnimating(true);
     setEredmeny(null);
     setProgress(0);
