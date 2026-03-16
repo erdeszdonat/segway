@@ -152,37 +152,36 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center md:justify-start p-4 md:p-8 lg:p-20 font-sans bg-cover bg-fixed transition-all duration-700" 
+    <div className="min-h-screen relative flex items-center justify-center p-4 md:p-8 lg:p-12 font-sans bg-cover bg-fixed transition-all duration-500" 
       style={{ 
         backgroundImage: "url('https://segwayrobotfunyiro.hu/media/bg/segway-navimow-x3.jpg')",
-        backgroundPosition: "70% center" // Eltoljuk a hátteret, hogy a fűnyíró kilátsszon
+        backgroundPosition: "center"
       }}>
       
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]"></div>
 
       <main className="relative z-10 w-full max-w-2xl bg-white/95 backdrop-blur-2xl shadow-[0_40px_100px_-15px_rgba(0,0,0,0.7)] rounded-[2.5rem] overflow-hidden border border-white/40">
         
-        <div className="bg-gradient-to-br from-[#111] to-[#222] p-8 md:p-12 text-white text-center border-b border-orange-500/20">
+        <div className="bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] p-8 md:p-12 text-white text-center border-b border-orange-500/20">
           
-          {/* --- MEGNÖVELT ÉS LÁTHATÓBB LOGÓ BOX --- */}
-          <div className="flex justify-center mb-8">
-             <div className="bg-white/90 p-4 rounded-2xl shadow-xl border border-white flex items-center justify-center min-w-[280px] md:min-w-[340px]">
+          {/* --- MEGNÖVELT LOGÓ, FEHÉR BOX NÉLKÜL, DROP SHADOW-VAL --- */}
+          <div className="flex justify-center mb-10">
                <img 
                  src="/logo.svg" 
                  alt="Segway Navimow Logo" 
-                 className="h-16 md:h-20 w-auto object-contain transition-transform hover:scale-105 duration-300"
+                 className="h-24 md:h-32 w-auto object-contain"
+                 style={{ filter: "drop-shadow(0 0 15px rgba(255, 255, 255, 0.4))" }}
                  onError={(e) => {
                    e.currentTarget.style.display = 'none';
                    const parent = e.currentTarget.parentElement;
                    if (parent) {
                      const text = document.createElement('span');
-                     text.className = "text-gray-900 font-black text-3xl tracking-tighter italic";
+                     text.className = "text-[#ff5a00] font-black text-4xl tracking-tighter italic";
                      text.innerText = "NAVIMOW";
                      parent.appendChild(text);
                    }
                  }}
                />
-             </div>
           </div>
 
           <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter italic text-[#ff5a00] drop-shadow-md">
@@ -192,8 +191,8 @@ export default function App() {
             Találja meg a kertjéhez tökéletes Segway Navimow robotfűnyírót másodpercek alatt!
           </p>
           {fixedDealer && (
-            <div className="mt-5 inline-flex items-center gap-2 px-5 py-2 bg-orange-500 text-white rounded-full text-xs font-black uppercase tracking-widest shadow-lg shadow-orange-500/30">
-              <span className="w-2 h-2 bg-white rounded-full animate-ping"></span>
+            <div className="mt-5 inline-flex items-center gap-2 px-5 py-2 bg-orange-600 text-white rounded-full text-xs font-black uppercase tracking-widest shadow-lg">
+              <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
               Partnerünk: {fixedDealer.nev}
             </div>
           )}
@@ -203,7 +202,7 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             
             <div className="flex flex-col">
-              <label className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 ml-1 text-shadow-sm">Kert mérete (m²)</label>
+              <label className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 ml-1">Kert mérete (m²)</label>
               <div className="relative group">
                 <input name="meret" type="number" placeholder="Pl. 500" required 
                   className="w-full pl-6 pr-14 py-5 bg-gray-50 border-2 border-gray-100 rounded-[1.25rem] focus:bg-white focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all text-gray-950 font-black text-xl outline-none shadow-inner" />
@@ -212,7 +211,7 @@ export default function App() {
             </div>
 
             <div className="flex flex-col">
-              <label className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 ml-1 text-shadow-sm">Max. Lejtő (%)</label>
+              <label className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 ml-1">Max. Lejtő (%)</label>
               <div className="relative group">
                 <input name="lejto" type="number" placeholder="Pl. 25" required 
                   className="w-full pl-6 pr-14 py-5 bg-gray-50 border-2 border-gray-100 rounded-[1.25rem] focus:bg-white focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all text-gray-950 font-black text-xl outline-none shadow-inner" />
