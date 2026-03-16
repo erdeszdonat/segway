@@ -134,7 +134,7 @@ export default function App() {
     // --- RESEND E-MAIL KÜLDÉS API HÍVÁS ---
     console.log("E-mail küldés indítása a szerver felé...");
     try {
-      const response = await fetch("/api/email", {
+      const response = await fetch("app/api/email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
