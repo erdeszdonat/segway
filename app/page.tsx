@@ -1,18 +1,20 @@
 "use client";
 import { useState, useEffect } from 'react';
 
-// --- KERESKEDŐK LISTÁJA ---
+// --- KERESKEDŐK LISTÁJA (A CSV ADATOK ALAPJÁN) ---
 const KERESKEDOK = [
-  { slug: "robotcentrum", nev: "Robotfűnyírócentrum - Robotfűnyíró szaküzlet", varos: "Budapest", cim: "1118 Budapest, Rétköz utca 7.", lat: 47.465, lon: 18.995, telefon: "+36 30 111 1111" },
-  { slug: "bako", nev: "Bakó és Társa Kft. Gazda-ABC és Kertigép Centrum", varos: "Szombathely", cim: "9700 Szombathely, Vasút út 10.", lat: 47.230, lon: 16.621, telefon: "+36 30 606 8000" },
-  { slug: "mega-szeged", nev: "Husqvarna Szeged - MEGA-PLUSZ Kft.", varos: "Szeged", cim: "6720 Szeged", lat: 46.253, lon: 20.141, telefon: "+36 30 222 2222" },
-  { slug: "hosagep", nev: "Husqvarna - kerti gépek - Hosagép Kft.", varos: "Budaörs", cim: "2040 Budaörs, Szabadság út 77.", lat: 47.461, lon: 18.953, telefon: "+36 20 355 4031" },
-  { slug: "mokry", nev: "Husqvarna Szakkereskedés Mokry Műszaki Áruház", varos: "Békéscsaba", cim: "5600 Békéscsaba, Mokry u. 16.", lat: 46.680, lon: 21.090, telefon: "+36 20 436 8346" },
-  { slug: "andl-veszprem", nev: "ANDL Kft. - Husqvarna szaküzlet", varos: "Veszprém", lat: 47.093, lon: 17.911, telefon: "+36 30 333 3333", cim: "8200 Veszprém" },
-  { slug: "gronway", nev: "Grönway Kft.", varos: "Budapest", lat: 47.530, lon: 19.120, telefon: "+36 30 444 4444", cim: "1152 Budapest" },
-  { slug: "rotacio", nev: "Rotáció Kft.", varos: "Tata", lat: 47.650, lon: 18.310, telefon: "+36 30 555 5555", cim: "2890 Tata" },
-  { slug: "kert-plusz", nev: "Kert-Plusz Kft.", varos: "Székesfehérvár", lat: 47.190, lon: 18.410, telefon: "+36 30 666 6666", cim: "8000 Székesfehérvár" },
-  { slug: "barta", nev: "Barta GT Bt", varos: "Eger", cim: "3300 Eger", lat: 47.900, lon: 20.370, telefon: "+36 30 444 5555" }
+  { slug: "andl-papa", nev: "ANDL Kft.", varos: "Pápa", cim: "8500 Pápa, Külső-Veszprémi út 64", lat: 47.330, lon: 17.460, telefon: "+36307803644" },
+  { slug: "andl-gyor", nev: "ANDL Kft.", varos: "Győr", cim: "9024 Győr, Pápai út 22.", lat: 47.683, lon: 17.635, telefon: "+36305431437" },
+  { slug: "andl-veszprem", nev: "ANDL Kft.", varos: "Veszprém", cim: "8200 Veszprém, Házgyári út 20.", lat: 47.093, lon: 17.911, telefon: "+36302776417" },
+  { slug: "robot1-papa", nev: "ROBOT1.HU", varos: "Pápa", cim: "8500 Pápa, Külső-Veszprémi út 64", lat: 47.331, lon: 17.461, telefon: "+36300131013" },
+  { slug: "pro-mower", nev: "Pro-Mower Kft.", varos: "Budaörs", cim: "2040 Budaörs, Kamaraerdei út 11", lat: 47.452, lon: 18.970, telefon: "+36205215214" },
+  { slug: "hosagep-budaors", nev: "Hosagép Kft.", varos: "Budaörs", cim: "2040 Budaörs, Szabadság út 77", lat: 47.461, lon: 18.953, telefon: "+3623789320" },
+  { slug: "hosagep-budapest", nev: "Hosagép Kft.", varos: "Budapest", cim: "1182 Budapest, Üllői út 555", lat: 47.430, lon: 19.180, telefon: "+36706235540" },
+  { slug: "mega-plusz", nev: "Mega-Plusz Kft.", varos: "Szeged", cim: "6728 Szeged, Vásárhelyi Pál utca 16", lat: 46.253, lon: 20.141, telefon: "+36300186060" },
+  { slug: "kabel-elektro", nev: "Kábel-Elektro Kft.", varos: "Békéscsaba", cim: "5600 Békéscsaba, Mokry utca 15", lat: 46.680, lon: 21.090, telefon: "+36204368346" },
+  { slug: "gronway", nev: "Grönway Kft.", varos: "Miskolc", cim: "3526 Miskolc, Szeles utca 27", lat: 48.103, lon: 20.783, telefon: "+3646357369" },
+  { slug: "agro-takacs", nev: "Agro Takács Kft.", varos: "Keszthely", cim: "8360 Keszthely, Bercsényi Miklós utca 72", lat: 46.767, lon: 17.243, telefon: "+36303965422" },
+  { slug: "bako", nev: "Bakó és Társa Kft.", varos: "Szombathely", cim: "9700 Szombathely, Vasút út 10.", lat: 47.230, lon: 16.621, telefon: "+36305840176" }
 ];
 
 function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -84,32 +86,37 @@ export default function App() {
 
     setIsCheckingCity(false);
 
-    // Módosított Gép logika (i108E nélkül)
     let modell = "";
     let indoklas = "";
+    let link = "https://segwayrobotfunyiro.hu/robotfunyiro";
     const arnyekolt = arnyekoltValue === 'igen';
 
     if (meret <= 500) {
       if (lejto <= 30) {
         modell = "Segway Navimow i105E";
         indoklas = "Kisebb kertekhez ez a legoptimálisabb választás, okos kamerás akadályelkerüléssel.";
+        link = "https://segwayrobotfunyiro.hu/robotfunyiro/segway-navimow-i105e";
       } else {
         modell = "Segway Navimow H500E";
         indoklas = "A meredek lejtő miatt a nagyobb kapaszkodóképességű H-széria szükséges a stabil működéshez.";
+        link = "https://segwayrobotfunyiro.hu/robotfunyiro/segway-navimow-h500e";
       }
     } else if (meret <= 800) {
-      // i108E kivéve, helyette H800E javasolt erre a méretre
       modell = "Segway Navimow H800E";
       indoklas = "Ekkora területre a robusztusabb H-szériát javasoljuk, amely magabiztosan kezeli a közepes kerteket.";
+      link = "https://segwayrobotfunyiro.hu/robotfunyiro/segway-navimow-h800e";
     } else if (meret <= 1500) {
       modell = arnyekolt ? "Segway Navimow H1500E + VisionFence" : "Segway Navimow H1500E";
       indoklas = arnyekolt ? "A fák/falak miatt a VisionFence kamera elengedhetetlen a pontos navigációhoz." : "Nagy teljesítményű, robusztus gép nagy kertekbe.";
+      link = "https://segwayrobotfunyiro.hu/robotfunyiro/segway-navimow-h1500e";
     } else if (meret <= 3000) {
       modell = arnyekolt ? "Segway Navimow H3000E + VisionFence" : "Segway Navimow H3000E";
       indoklas = "A legnagyobb kapacitású csúcsmodell, amely megbirkózik a legnagyobb területekkel is.";
+      link = "https://segwayrobotfunyiro.hu/robotfunyiro/segway-navimow-h3000e";
     } else {
       modell = "Ipari megoldás / Több robot";
       indoklas = "Ekkora területre érdemes több gépben vagy ipari Segway megoldásban gondolkodni.";
+      link = "https://segwayrobotfunyiro.hu/robotfunyiro";
     }
 
     setIsAnimating(true);
@@ -126,7 +133,7 @@ export default function App() {
     setTimeout(() => {
       clearInterval(progressInterval);
       setIsAnimating(false);
-      setEredmeny({ modell, indoklas, kereskedo: nearestKereskedo, tavolsag: tavolsagKm });
+      setEredmeny({ modell, indoklas, link, kereskedo: nearestKereskedo, tavolsag: tavolsagKm });
     }, 4500);
   };
 
@@ -134,22 +141,20 @@ export default function App() {
     <div className="min-h-screen relative flex items-center justify-center p-4 md:p-8 font-sans bg-cover bg-center bg-fixed" 
       style={{ backgroundImage: "url('https://segwayrobotfunyiro.hu/media/bg/segway-navimow-x3.jpg')" }}>
       
-      {/* Sötétítő réteg a háttéren az olvashatóságért */}
       <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"></div>
 
       <main className="relative z-10 w-full max-w-2xl bg-white/95 backdrop-blur-2xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.6)] rounded-[2.5rem] overflow-hidden border border-white/40">
         
-        {/* Fejléc logóval */}
         <div className="bg-gradient-to-br from-[#111] to-[#333] p-8 md:p-10 text-white text-center border-b border-orange-500/20">
           <div className="flex justify-center mb-6">
-             {/* Segway Navimow SVG Logo */}
-             <svg width="220" height="40" viewBox="0 0 220 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm">
-                <path d="M12.5 10H5V30H12.5V22H18V30H25.5V10H18V18H12.5V10Z" fill="white"/>
-                <path d="M35 10H42.5V23.5C42.5 25.5 44 27 46 27C48 27 49.5 25.5 49.5 23.5V10H57V23.5C57 29.5 52 34.5 46 34.5C40 34.5 35 29.5 35 23.5V10Z" fill="#ff5a00"/>
-                <path d="M68 10H75.5V30H68V10Z" fill="white"/>
-                <path d="M85 10H92.5V30H85V10Z" fill="white"/>
-                <text x="105" y="28" fill="white" fontSize="22" fontWeight="900" fontFamily="sans-serif">NAVIMOW</text>
-             </svg>
+             <img 
+               src="/logo.svg" 
+               alt="Segway Navimow Logo" 
+               className="h-10 md:h-12 w-auto drop-shadow-sm" 
+               onError={(e) => {
+                 e.currentTarget.style.display = 'none';
+               }}
+             />
           </div>
           <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight italic text-[#ff5a00]">
             Robotfűnyíró Kalkulátor
@@ -159,7 +164,7 @@ export default function App() {
           </p>
           {fixedDealer && (
             <div className="mt-4 inline-block px-4 py-1 bg-orange-500/20 border border-orange-500/30 rounded-full text-xs font-bold text-orange-400">
-              Partnerünk: {fixedDealer.nev}
+              Partnerünk: {fixedDealer.nev} ({fixedDealer.varos})
             </div>
           )}
         </div>
@@ -251,32 +256,42 @@ export default function App() {
             <div className="p-8 md:p-10 text-center">
               <p className="text-gray-700 font-medium leading-relaxed text-lg mb-8">{eredmeny.indoklas}</p>
               
-              {eredmeny.kereskedo && (
-                <div className="space-y-4">
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <a href={`https://www.google.com/maps/dir/?api=1&destination=${eredmeny.kereskedo.lat},${eredmeny.kereskedo.lon}`} target="_blank" rel="noreferrer" 
-                      className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-orange-500 text-white rounded-2xl font-black text-sm uppercase tracking-wider hover:bg-orange-600 hover:shadow-lg transition-all transform active:scale-[0.97]">
-                      📍 Útvonalterv
-                    </a>
-                    <a href={`tel:${eredmeny.kereskedo.telefon.replace(/\s+/g, '')}`} 
-                      className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gray-950 text-white rounded-2xl font-black text-sm uppercase tracking-wider hover:bg-gray-800 transition-all transform active:scale-[0.97]">
-                      📞 Hívás indítása
-                    </a>
-                  </div>
+              <div className="space-y-4">
+                <a href={eredmeny.link} target="_blank" rel="noreferrer" 
+                  className="w-full flex items-center justify-center gap-3 px-6 py-5 bg-[#ff5a00] text-white rounded-2xl font-black text-lg uppercase tracking-wider hover:bg-[#e04f00] hover:shadow-xl transition-all transform active:scale-[0.98] mb-4">
+                  <span>Megtekintem a terméket</span>
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </a>
 
-                  <div className="p-5 bg-orange-50 rounded-[2rem] border border-orange-100 text-left">
-                    <p className="text-[10px] font-black text-orange-600 uppercase tracking-widest mb-2 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse"></span>
-                       Legközelebbi partner
-                    </p>
-                    <h3 className="font-black text-gray-900 text-xl leading-tight">{eredmeny.kereskedo.nev}</h3>
-                    <p className="text-sm text-gray-500 font-medium mt-1 leading-snug">
-                      {eredmeny.kereskedo.cim} 
-                      {eredmeny.tavolsag !== null && <span className="text-orange-600 font-bold ml-1">(~{eredmeny.tavolsag} km)</span>}
-                    </p>
-                  </div>
-                </div>
-              )}
+                {eredmeny.kereskedo && (
+                  <>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <a href={`https://www.google.com/maps/dir/?api=1&destination=${eredmeny.kereskedo.lat},${eredmeny.kereskedo.lon}`} target="_blank" rel="noreferrer" 
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-4 bg-gray-100 text-gray-900 rounded-2xl font-black text-xs uppercase tracking-wider hover:bg-gray-200 transition-all transform active:scale-[0.97]">
+                        📍 Útvonalterv
+                      </a>
+                      <a href={`tel:${eredmeny.kereskedo.telefon.replace(/\s+/g, '')}`} 
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-4 bg-gray-950 text-white rounded-2xl font-black text-xs uppercase tracking-wider hover:bg-gray-800 transition-all transform active:scale-[0.97]">
+                        📞 Hívás indítása
+                      </a>
+                    </div>
+
+                    <div className="p-5 bg-orange-50 rounded-[2rem] border border-orange-100 text-left">
+                      <p className="text-[10px] font-black text-orange-600 uppercase tracking-widest mb-2 flex items-center gap-2">
+                         <span className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse"></span>
+                         Kalkulált partnerünk
+                      </p>
+                      <h3 className="font-black text-gray-900 text-xl leading-tight">{eredmeny.kereskedo.nev}</h3>
+                      <p className="text-sm text-gray-500 font-medium mt-1 leading-snug">
+                        {eredmeny.kereskedo.cim} 
+                        {eredmeny.tavolsag !== null && <span className="text-orange-600 font-bold ml-1">(~{eredmeny.tavolsag} km)</span>}
+                      </p>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
