@@ -92,14 +92,14 @@ export default function App() {
     let link = "";
     const arnyekolt = arnyekoltValue === 'igen';
 
-    if (meret <= 500) {
-      if (lejto <= 30) {
-        modell = "Segway Navimow i105E";
-        indoklas = "Kisebb kertekhez ez a legoptimálisabb választás.";
-        link = "https://segwayrobotfunyiro.hu/robotfunyiro/segway-navimow-i105e";
+    if (meret <= 600) {
+      if (lejto > 30) {
+        modell = "Segway Navimow i210E AWD";
+        indoklas = "Az összkerekes hajtásnak köszönhetően a meredek kerti szakaszokat is könnyedén kezeli.";
+        link = "https://segwayrobotfunyiro.hu/robotfunyiro/navimow-i210e-awd-rb1aa-12-07-03-0001.html";
       } else {
         modell = "Segway Navimow H206E";
-        indoklas = "A meredekebb lejtők miatt a nagyobb kapaszkodóképességű H-szériát javasoljuk.";
+        indoklas = "Kisebb kertekhez kiváló választás a robusztus H-szériából.";
         link = "https://segwayrobotfunyiro.hu/robotfunyiro/segway-navimow-h206e-rb1aa-12-05-02-0001.html";
       }
     } else if (meret <= 1000) {
