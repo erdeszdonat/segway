@@ -138,44 +138,41 @@ export default function App() {
       currentProgress += 1;
       if (currentProgress <= 100) setProgress(currentProgress);
       if (currentProgress >= 100) clearInterval(progressInterval);
-    }, 30);
+    }, 25);
 
     setTimeout(() => {
       clearInterval(progressInterval);
       setIsAnimating(false);
       setEredmeny({ modell, indoklas, link, kereskedo: nearestKereskedo, tavolsag: tavolsagKm });
-    }, 3200);
+    }, 2800);
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center p-2 md:p-6 font-sans bg-cover bg-fixed transition-all duration-500" 
+    <div className="min-h-screen relative flex items-center justify-center p-2 font-sans bg-cover bg-fixed transition-all duration-700" 
       style={{ 
         backgroundImage: "url('https://segwayrobotfunyiro.hu/media/bg/segway-navimow-x3.jpg')",
-        backgroundPosition: "center"
+        backgroundPosition: "right 15% center" // A robot így látszódni fog asztali gépen
       }}>
       
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px]"></div>
+      <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]"></div>
 
-      <main className="relative z-10 w-full max-w-xl bg-white/95 backdrop-blur-2xl shadow-[0_20px_60px_-10px_rgba(0,0,0,0.5)] rounded-[2rem] overflow-hidden border border-white/40">
+      <main className="relative z-10 w-full max-w-2xl bg-white/95 backdrop-blur-3xl shadow-[0_30px_100px_-10px_rgba(0,0,0,0.5)] rounded-[2.5rem] overflow-hidden border border-white/40">
         
-        {/* --- VILÁGOSSZÜRKE FEJLÉC, KISEBB PADDING --- */}
-        <div className="bg-gray-100 p-4 md:p-6 text-center border-b border-gray-200">
-          
-          <div className="flex justify-center mb-4">
+        {/* --- KOMPAKT VILÁGOSSZÜRKE FEJLÉC --- */}
+        <div className="bg-gray-100 p-4 md:p-5 text-center border-b border-gray-200 relative">
+          <div className="flex justify-center mb-3">
                <img 
                  src="/logo.svg" 
                  alt="Segway Navimow Logo" 
-                 className="h-12 md:h-16 w-auto object-contain"
-                 onError={(e) => {
-                   e.currentTarget.style.display = 'none';
-                 }}
+                 className="h-14 md:h-18 w-auto object-contain"
+                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
                />
           </div>
 
-          <h1 className="text-xl md:text-3xl font-black uppercase tracking-tighter italic text-gray-900">
+          <h1 className="text-xl md:text-3xl font-black uppercase tracking-tighter italic text-gray-950">
             Robotfűnyíró Kalkulátor
           </h1>
-          <p className="mt-1 text-gray-600 font-bold text-xs md:text-sm max-w-md mx-auto leading-relaxed opacity-90">
+          <p className="mt-1 text-gray-500 font-bold text-[10px] md:text-xs max-w-md mx-auto leading-tight opacity-90">
             Találja meg a tökéletes Segway Navimow robotfűnyírót másodpercek alatt!
           </p>
         </div>
@@ -187,8 +184,8 @@ export default function App() {
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Kert mérete (m²)</label>
               <div className="relative">
                 <input name="meret" type="number" placeholder="Pl. 500" required 
-                  className="w-full pl-4 pr-10 py-2.5 bg-white border border-gray-200 rounded-xl focus:border-orange-500 transition-all text-gray-950 font-bold text-base outline-none shadow-sm" />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-xs">m²</span>
+                  className="w-full pl-4 pr-10 py-3 bg-white border border-gray-200 rounded-2xl focus:border-orange-500 transition-all text-gray-950 font-bold text-lg outline-none shadow-sm" />
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-black text-xs">m²</span>
               </div>
             </div>
 
@@ -196,24 +193,24 @@ export default function App() {
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Max. Lejtő (%)</label>
               <div className="relative">
                 <input name="lejto" type="number" placeholder="Pl. 25" required 
-                  className="w-full pl-4 pr-10 py-2.5 bg-white border border-gray-200 rounded-xl focus:border-orange-500 transition-all text-gray-950 font-bold text-base outline-none shadow-sm" />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-xs">%</span>
+                  className="w-full pl-4 pr-10 py-3 bg-white border border-gray-200 rounded-2xl focus:border-orange-500 transition-all text-gray-950 font-bold text-lg outline-none shadow-sm" />
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-black text-xs">%</span>
               </div>
             </div>
 
             <div className="flex flex-col md:col-span-2">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">GPS árnyékoltság (Adottság)</label>
-              <div className="grid grid-cols-2 gap-3">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">GPS árnyékoltság (Kerti adottság)</label>
+              <div className="grid grid-cols-2 gap-4">
                 <div onClick={() => setArnyekoltValue("nem")}
-                  className={`cursor-pointer border-2 rounded-xl p-3 flex items-center gap-3 transition-all duration-300 ${arnyekoltValue === 'nem' ? 'border-orange-500 bg-orange-50' : 'border-gray-100 bg-white hover:border-gray-200'}`}>
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-lg ${arnyekoltValue === 'nem' ? 'bg-orange-500 text-white shadow-md' : 'bg-gray-100 text-gray-400'}`}>☀️</div>
-                  <div className="font-black text-[10px] text-gray-900 uppercase">Tiszta</div>
+                  className={`cursor-pointer border-2 rounded-2xl p-4 flex items-center gap-4 transition-all duration-300 ${arnyekoltValue === 'nem' ? 'border-orange-500 bg-orange-50 shadow-md' : 'border-gray-100 bg-white hover:border-gray-200 shadow-sm'}`}>
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-2xl ${arnyekoltValue === 'nem' ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-400'}`}>☀️</div>
+                  <div className="font-black text-xs text-gray-900 uppercase tracking-tighter">Tiszta</div>
                 </div>
 
                 <div onClick={() => setArnyekoltValue("igen")}
-                  className={`cursor-pointer border-2 rounded-xl p-3 flex items-center gap-3 transition-all duration-300 ${arnyekoltValue === 'igen' ? 'border-orange-500 bg-orange-50' : 'border-gray-100 bg-white hover:border-gray-200'}`}>
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-lg ${arnyekoltValue === 'igen' ? 'bg-orange-500 text-white shadow-md' : 'bg-gray-100 text-gray-400'}`}>🌳</div>
-                  <div className="font-black text-[10px] text-gray-900 uppercase">Zárt</div>
+                  className={`cursor-pointer border-2 rounded-2xl p-4 flex items-center gap-4 transition-all duration-300 ${arnyekoltValue === 'igen' ? 'border-orange-500 bg-orange-50 shadow-md' : 'border-gray-100 bg-white hover:border-gray-200 shadow-sm'}`}>
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-2xl ${arnyekoltValue === 'igen' ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-400'}`}>🌳</div>
+                  <div className="font-black text-xs text-gray-900 uppercase tracking-tighter">Zárt</div>
                 </div>
               </div>
               <input type="hidden" name="arnyekolt" value={arnyekoltValue} />
@@ -223,20 +220,20 @@ export default function App() {
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Település</label>
               <input name="telepules" type="text" placeholder="Pl. Esztergom" required 
                 onChange={() => setCityError("")}
-                className={`w-full px-4 py-2.5 bg-white border ${cityError ? 'border-red-500' : 'border-gray-200'} rounded-xl outline-none font-bold text-sm text-gray-900 shadow-sm transition-all`} />
-              {cityError && <p className="text-[9px] text-red-500 font-black mt-1 uppercase ml-1">{cityError}</p>}
+                className={`w-full px-5 py-3 bg-white border ${cityError ? 'border-red-500' : 'border-gray-200'} rounded-2xl outline-none font-bold text-base text-gray-900 shadow-sm transition-all`} />
+              {cityError && <p className="text-[10px] text-red-500 font-black mt-1 uppercase ml-1">{cityError}</p>}
             </div>
 
             <div className="flex flex-col">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">E-mail cím</label>
               <input name="email" type="email" placeholder="nev@email.hu" required 
-                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl outline-none font-bold text-sm text-gray-900 shadow-sm transition-all" />
+                className="w-full px-5 py-3 bg-white border border-gray-200 rounded-2xl outline-none font-bold text-base text-gray-900 shadow-sm transition-all" />
             </div>
 
             <div className="md:col-span-2">
-              <label className="flex items-start gap-3 cursor-pointer group">
-                <input type="checkbox" required className="mt-0.5 w-4 h-4 rounded border-gray-200 text-orange-500 cursor-pointer" />
-                <span className="text-[10px] text-gray-500 font-bold leading-tight">
+              <label className="flex items-center gap-4 cursor-pointer group px-1">
+                <input type="checkbox" required className="w-5 h-5 rounded-md border-gray-300 text-orange-500 cursor-pointer shadow-sm" />
+                <span className="text-[11px] text-gray-500 font-bold leading-tight group-hover:text-gray-800 transition-colors">
                   Elfogadom az Adatvédelmi tájékoztatót.
                 </span>
               </label>
@@ -244,9 +241,9 @@ export default function App() {
 
             <div className="md:col-span-2">
               <button type="submit" disabled={isCheckingCity}
-                className="w-full bg-[#111] hover:bg-orange-600 text-white py-3.5 px-6 rounded-xl font-black text-base uppercase tracking-widest shadow-xl transform active:scale-[0.98] transition-all duration-300 disabled:opacity-70 flex items-center justify-center gap-3">
+                className="w-full bg-gray-950 hover:bg-orange-600 text-white py-4 px-8 rounded-2xl font-black text-lg uppercase tracking-[0.2em] shadow-xl transform active:scale-[0.98] transition-all duration-300 disabled:opacity-70 flex items-center justify-center gap-4 mt-2">
                 {isCheckingCity ? (
-                  <div className="w-5 h-5 border-3 border-white/20 border-t-white rounded-full animate-spin"></div>
+                  <div className="w-6 h-6 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
                 ) : (
                   "Ideális gép mutatása"
                 )}
@@ -256,60 +253,72 @@ export default function App() {
         </form>
       </main>
 
-      {/* --- EREDMÉNY MODAL --- */}
+      {/* --- EREDMÉNY MODAL (GÖRGETHETŐ ÉS MEGFELELŐ MÉRETŰ) --- */}
       {eredmeny && !isAnimating && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-300 overflow-y-auto">
-          <div className="relative w-full max-w-lg bg-white rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500 my-auto">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in duration-300 overflow-y-auto">
+          <div className="relative w-full max-w-xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500 my-auto max-h-[90vh] flex flex-col border border-white/20">
             
-            <button onClick={() => setEredmeny(null)} className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full font-bold z-50">✕</button>
+            {/* --- JAVÍTOTT X GOMB: MINDIG LÁTSZIK ÉS KONTRASZTOS --- */}
+            <button 
+              onClick={() => setEredmeny(null)} 
+              className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-black/50 text-white rounded-full font-bold z-[210] hover:bg-black transition-colors"
+            >✕</button>
 
-            <div className="bg-orange-500 p-8 text-center text-white">
-              <span className="inline-block bg-white/20 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4">Kalkulált eredmény</span>
-              <h2 className="text-3xl font-black tracking-tighter italic drop-shadow-lg">{eredmeny.modell}</h2>
-            </div>
-            
-            <div className="p-6 md:p-10 text-center">
-              <p className="text-gray-700 font-bold leading-relaxed text-lg mb-8">{eredmeny.indoklas}</p>
+            <div className="overflow-y-auto flex-1">
+              <div className="bg-orange-600 p-10 text-center text-white relative">
+                <span className="inline-block bg-white/20 px-5 py-1.5 rounded-full text-[11px] font-black uppercase tracking-[0.2em] mb-4">Kalkulált eredmény</span>
+                <h2 className="text-4xl md:text-5xl font-black tracking-tighter italic drop-shadow-lg">{eredmeny.modell}</h2>
+              </div>
               
-              <div className="space-y-4">
-                <a href={eredmeny.link} target="_blank" rel="noreferrer" 
-                  className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-orange-500 text-white rounded-xl font-black text-lg uppercase tracking-wider hover:bg-orange-600 shadow-lg transform active:scale-[0.98] transition-all">
-                  Megtekintem a terméket
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </a>
+              <div className="p-8 md:p-12 text-center">
+                <p className="text-gray-700 font-bold leading-relaxed text-xl mb-10">{eredmeny.indoklas}</p>
+                
+                <div className="space-y-4">
+                  <a href={eredmeny.link} target="_blank" rel="noreferrer" 
+                    className="w-full flex items-center justify-center gap-4 px-8 py-5 bg-orange-500 text-white rounded-2xl font-black text-xl uppercase tracking-widest hover:bg-orange-600 shadow-xl transform active:scale-[0.98] transition-all">
+                    Megtekintem a terméket
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </a>
 
-                {eredmeny.kereskedo && (
-                  <div className="p-5 bg-gray-50 rounded-2xl border border-gray-200 text-left">
-                    <p className="text-[10px] font-black text-orange-600 uppercase mb-2 flex items-center gap-2 italic">
-                       📍 Legközelebbi partnerünk
-                    </p>
-                    <h3 className="font-black text-gray-950 text-xl tracking-tight">{eredmeny.kereskedo.nev}</h3>
-                    <p className="text-xs text-gray-500 font-bold mt-1">
-                      {eredmeny.kereskedo.cim} 
-                      {eredmeny.tavolsag !== null && <span className="text-orange-600 ml-2">(~{eredmeny.tavolsag} km)</span>}
-                    </p>
-                    <div className="grid grid-cols-2 gap-2 mt-4">
-                        <a href={`https://www.google.com/maps/dir/?api=1&destination=${eredmeny.kereskedo.lat},${eredmeny.kereskedo.lon}`} target="_blank" rel="noreferrer" className="bg-white border border-gray-200 py-2 rounded-lg text-center text-[10px] font-black uppercase tracking-widest hover:border-orange-500 transition-all">Útvonal</a>
-                        <a href={`tel:${eredmeny.kereskedo.telefon}`} className="bg-gray-900 text-white py-2 rounded-lg text-center text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all">Hívás</a>
+                  {eredmeny.kereskedo && (
+                    <div className="p-6 bg-gray-50 rounded-[2rem] border-2 border-gray-100 text-left shadow-inner">
+                      <p className="text-[10px] font-black text-orange-600 uppercase mb-2 flex items-center gap-2 italic tracking-widest">
+                         📍 Legközelebbi szakkereskedő
+                      </p>
+                      <h3 className="font-black text-gray-950 text-2xl tracking-tight">{eredmeny.kereskedo.nev}</h3>
+                      <p className="text-sm text-gray-500 font-bold mt-1">
+                        {eredmeny.kereskedo.cim} 
+                        {eredmeny.tavolsag !== null && <span className="text-orange-600 ml-2">(~{eredmeny.tavolsag} km)</span>}
+                      </p>
+                      
+                      {/* --- ÚTVONALTERVEZÉS ÉS HÍVÁS GOMBOK --- */}
+                      <div className="grid grid-cols-2 gap-3 mt-5">
+                          <a href={`https://www.google.com/maps/dir/?api=1&destination=${eredmeny.kereskedo.lat},${eredmeny.kereskedo.lon}`} target="_blank" rel="noreferrer" className="bg-white border border-gray-200 py-3 rounded-xl text-center text-xs font-black uppercase tracking-widest hover:border-orange-500 transition-all shadow-sm text-gray-900">Útvonal</a>
+                          <a href={`tel:${eredmeny.kereskedo.telefon}`} className="bg-gray-950 text-white py-3 rounded-xl text-center text-xs font-black uppercase tracking-widest hover:bg-black transition-all shadow-md">Hívás indítása</a>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* --- ANIMÁCIÓ --- */}
+      {/* --- PRÉMIUM ANIMÁCIÓ --- */}
       {isAnimating && (
-        <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-xl flex flex-col items-center justify-center p-8 text-center">
-          <div className="w-24 h-24 border-8 border-orange-500 border-t-transparent rounded-full animate-spin mb-8"></div>
-          <h2 className="text-2xl md:text-4xl font-black text-white uppercase tracking-[0.2em] italic">
-             Navimow elemzése...
+        <div className="fixed inset-0 z-[100] bg-gray-950/90 backdrop-blur-xl flex flex-col items-center justify-center p-8 text-center">
+          <div className="relative w-32 h-32 mb-10">
+            <div className="absolute inset-0 border-8 border-white/5 rounded-full"></div>
+            <div className="absolute inset-0 border-8 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="absolute inset-0 flex items-center justify-center text-4xl">🤖</div>
+          </div>
+          <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-[0.3em] italic animate-pulse">
+             Elemzés folyamatban...
           </h2>
-          <p className="text-white font-black mt-4 text-5xl">{progress}%</p>
+          <p className="text-orange-500 font-black mt-6 text-6xl tracking-tighter italic">{progress}%</p>
         </div>
       )}
     </div>
