@@ -1,355 +1,280 @@
 "use client";
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-// --- KERESKEDŐK LISTÁJA (A CSV ADATOK ALAPJÁN) ---
-const KERESKEDOK = [
-  { slug: "andl-papa", nev: "ANDL Kft.", varos: "Pápa", cim: "8500 Pápa, Külső-Veszprémi út 64", lat: 47.330, lon: 17.460, telefon: "+36307803644" },
-  { slug: "andl-gyor", nev: "ANDL Kft.", varos: "Győr", cim: "9024 Győr, Pápai út 22.", lat: 47.683, lon: 17.635, telefon: "+36305431437" },
-  { slug: "andl-veszprem", nev: "ANDL Kft.", varos: "Veszprém", cim: "8200 Veszprém, Házgyári út 20.", lat: 47.093, lon: 17.911, telefon: "+36302776417" },
-  { slug: "robot1-papa", nev: "ROBOT1.HU", varos: "Pápa", cim: "8500 Pápa, Külső-Veszprémi út 64", lat: 47.331, lon: 17.461, telefon: "+36300131013" },
-  { slug: "pro-mower", nev: "Pro-Mower Kft.", varos: "Budaörs", cim: "2040 Budaörs, Kamaraerdei út 11", lat: 47.452, lon: 18.970, telefon: "+36205215214" },
-  { slug: "hosagep-budaors", nev: "Hosagép Kft.", varos: "Budaörs", cim: "2040 Budaörs, Szabadság út 77", lat: 47.461, lon: 18.953, telefon: "+3623789320" },
-  { slug: "hosagep-budapest", nev: "Hosagép Kft.", varos: "Budapest", cim: "1182 Budapest, Üllői út 555", lat: 47.430, lon: 19.180, telefon: "+36706235540" },
-  { slug: "mega-plusz", nev: "Mega-Plusz Kft.", varos: "Szeged", cim: "6728 Szeged, Vásárhelyi Pál utca 16", lat: 46.253, lon: 20.141, telefon: "+36300186060" },
-  { slug: "kabel-elektro", nev: "Kábel-Elektro Kft.", varos: "Békéscsaba", cim: "5600 Békéscsaba, Mokry utca 15", lat: 46.680, lon: 21.090, telefon: "+36204368346" },
-  { slug: "gronway", nev: "Grönway Kft.", varos: "Miskolc", cim: "3526 Miskolc, Szeles utca 27", lat: 48.103, lon: 20.783, telefon: "+3646357369" },
-  { slug: "agro-takacs", nev: "Agro Takács Kft.", varos: "Keszthely", cim: "8360 Keszthely, Bercsényi Miklós utca 72", lat: 46.767, lon: 17.243, telefon: "+36303965422" },
-  { slug: "bako", nev: "Bakó és Társa Kft.", varos: "Szombathely", cim: "9700 Szombathely, Vasút út 10.", lat: 47.230, lon: 16.621, telefon: "+36305840176" }
-];
+function ServiceCard({ title, desc, icon }: { title: string; desc: string; icon: string }) {
+  // Belső állapot a mobil érintéses/kattintásos forgatáshoz
+  const [isFlipped, setIsFlipped] = useState(false);
 
-function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
-  const R = 6371;
-  const dLat = (lat2 - lat1) * (Math.PI / 180);
-  const dLon = (lon2 - lon1) * (Math.PI / 180);
-  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
+  return (
+    <div 
+      className="group h-64 w-full [perspective:1000px] cursor-pointer"
+      onClick={() => setIsFlipped(!isFlipped)}
+    >
+      <div className={`relative h-full w-full rounded-3xl transition-transform duration-700 [transform-style:preserve-3d] shadow-lg hover:shadow-xl md:group-hover:[transform:rotateY(180deg)] ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}>
+        
+        {/* Kártya EJE */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center rounded-3xl bg-white/80 backdrop-blur-sm p-6 text-center border border-white/60 [backface-visibility:hidden]">
+          <span className="text-5xl mb-4">{icon}</span>
+          <h3 className="text-xl font-bold text-[#17394E]">{title}</h3>
+          
+          {/* Vizuális indikátor a kártya forgatáshoz (Előlap) */}
+          <div className="absolute bottom-5 right-5 flex items-center gap-1.5 text-[#4F9FCF] bg-[#4F9FCF]/10 px-3 py-1.5 rounded-full transition-all group-hover:bg-[#4F9FCF]/20">
+            <span className="text-[10px] font-bold uppercase tracking-wider">Részletek</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-3.5 h-3.5 animate-pulse">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+            </svg>
+          </div>
+        </div>
+        
+        {/* Kártya HÁTULJA */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center rounded-3xl bg-gradient-to-br from-[#4F9FCF] to-[#2E6F97] p-6 text-center [transform:rotateY(180deg)] [backface-visibility:hidden] border border-[#7FBCE4]/50 shadow-inner">
+          <span className="text-3xl mb-2 opacity-80">{icon}</span>
+          <h3 className="text-lg font-bold text-white mb-2">{title}</h3>
+          <p className="text-sm text-[#F4FBFF] font-medium">{desc}</p>
+          
+          {/* Vissza indikátor (Hátlap) */}
+          <div className="absolute bottom-5 left-5 flex items-center gap-1.5 text-[#A8D6F0] bg-[#A8D6F0]/10 px-3 py-1.5 rounded-full transition-all hover:bg-[#A8D6F0]/20">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-3.5 h-3.5 animate-pulse">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            </svg>
+            <span className="text-[10px] font-bold uppercase tracking-wider">Vissza</span>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  );
+}
+
+function getOnCallStatus(): { isOpen: boolean; label: string; timeText: string } {
+  const now = new Date();
+  const budapestTime = new Date(
+    now.toLocaleString("en-US", { timeZone: "Europe/Budapest" })
+  );
+  const month = budapestTime.getMonth() + 1;
+  const date = budapestTime.getDate();
+  const day = budapestTime.getDay();
+  const hour = budapestTime.getHours();
+  const minute = budapestTime.getMinutes();
+  const totalMinutes = hour * 60 + minute;
+
+  // 1. KIVÉTEL: Március 14-15. Ünnepi nyitvatartás (09:00 - 15:00)
+  if (month === 3 && (date >= 12 && date <= 15)) {
+    const isActuallyHoliday = (date === 14 || date === 15);
+    const isInHolidayHours = isActuallyHoliday && totalMinutes >= 540 && totalMinutes < 900;
+    
+    if (isInHolidayHours) {
+      return { 
+        isOpen: true, 
+        label: "Ünnepi Ügyelet Nyitva",
+        timeText: "03.14 - 03.15: 09:00 - 15:00"
+      };
+    }
+    return { 
+      isOpen: false, 
+      label: "Jelenleg nem folyik ügyeleti ellátás",
+      timeText: "03.14 - 03.15: 09:00 - 15:00"
+    };
+  }
+
+  // 2. NORMÁL REND: Hétvége (07:00 - 13:00)
+  const isSatOrSun = day === 0 || day === 6;
+  const isInHours = totalMinutes >= 420 && totalMinutes < 780;
+
+  if (isSatOrSun && isInHours) {
+    return { 
+      isOpen: true, 
+      label: "Esztergomi Lakosok Ügyelete",
+      timeText: "Szo - Vas: 07:00 - 13:00"
+    };
+  }
+  return { 
+    isOpen: false, 
+    label: "Jelenleg nem folyik ügyeleti ellátás",
+    timeText: "Szo - Vas: 07:00 - 13:00"
+  };
 }
 
 export default function App() {
-  const [isPartner, setIsPartner] = useState(false);
-  const [fixedDealer, setFixedDealer] = useState<any>(null);
-  const [eredmeny, setEredmeny] = useState<any>(null);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [arnyekoltValue, setArnyekoltValue] = useState("nem");
-  const [cityError, setCityError] = useState("");
-  const [isCheckingCity, setIsCheckingCity] = useState(false);
+  const [dentalData, setDentalData] = useState<any>(null);
+  const [status, setStatus] = useState({ isOpen: false, label: "Kiszámolás alatt...", timeText: "..." });
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setIsPartner(params.get('partner') === '1');
-    const dealerSlug = params.get('dealer');
-    if (dealerSlug) {
-      const found = KERESKEDOK.find(k => k.slug === dealerSlug);
-      if (found) setFixedDealer(found);
-    }
+    setStatus(getOnCallStatus());
   }, []);
 
-  const szamolas = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const meret = Number(formData.get('meret'));
-    const lejto = Number(formData.get('lejto'));
-    const telepules = formData.get('telepules') as string;
-    const email = formData.get('email') as string;
-
-    setIsCheckingCity(true);
-    setCityError("");
-
-    let nearestKereskedo = fixedDealer || KERESKEDOK[0];
-    let tavolsagKm: number | null = null;
-
-    if (!fixedDealer) {
+  useEffect(() => {
+    async function fetchSupabaseData() {
+      let supabaseUrl = "";
+      let supabaseKey = "";
+      
       try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(telepules)}, Hungary`);
-        const data = await res.json();
-        if (!data || data.length === 0) {
-          setCityError("Nem találjuk ezt a települést. Lehet, hogy elírta a nevét?");
-          setIsCheckingCity(false);
-          return;
+        if (typeof process !== "undefined" && process.env) {
+          supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+          supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
         }
-        const userLat = parseFloat(data[0].lat);
-        const userLon = parseFloat(data[0].lon);
-        let minDistance = Infinity;
-        for (const k of KERESKEDOK) {
-          const dist = getDistanceFromLatLonInKm(userLat, userLon, k.lat, k.lon);
-          if (dist < minDistance) {
-            minDistance = dist;
-            nearestKereskedo = k;
-            tavolsagKm = Math.round(dist);
+      } catch (err) {
+        console.warn("Környezeti változók nem elérhetők.");
+      }
+
+      if (!supabaseUrl || !supabaseKey) return;
+
+      try {
+        const res = await fetch(
+          `${supabaseUrl}/rest/v1/on_call?service_type=eq.dental&select=*`,
+          {
+            headers: {
+              apikey: supabaseKey,
+              Authorization: `Bearer ${supabaseKey}`,
+            },
           }
+        );
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0) setDentalData(data[0]);
         }
-      } catch (err) { console.error(err); }
-    }
-
-    setIsCheckingCity(false);
-
-    // --- KALKULÁCIÓS LOGIKA (i105 nélkül) ---
-    let modell = "";
-    let indoklas = "";
-    let link = "";
-    const arnyekolt = arnyekoltValue === 'igen';
-
-    if (meret <= 600) {
-      if (lejto > 30) {
-        modell = "Segway Navimow i210E AWD";
-        indoklas = "Az összkerekes hajtásnak köszönhetően a meredek kerti szakaszokat is könnyedén kezeli.";
-        link = "https://segwayrobotfunyiro.hu/robotfunyiro/navimow-i210e-awd-rb1aa-12-07-03-0001.html";
-      } else {
-        modell = "Segway Navimow H206E";
-        indoklas = "Kisebb kertekhez kiváló választás a robusztus H-szériából.";
-        link = "https://segwayrobotfunyiro.hu/robotfunyiro/segway-navimow-h206e-rb1aa-12-05-02-0001.html";
+      } catch (e) {
+        console.error("Hiba az adatok lekérésekor:", e);
       }
-    } else if (meret <= 1000) {
-      if (lejto > 30) {
-        modell = "Segway Navimow i210E AWD";
-        indoklas = "Az összkerekes hajtásnak köszönhetően a meredek kerti szakaszokat is könnyedén kezeli.";
-        link = "https://segwayrobotfunyiro.hu/robotfunyiro/navimow-i210e-awd-rb1aa-12-07-03-0001.html";
-      } else {
-        modell = "Segway Navimow H210E";
-        indoklas = "Tökéletes választás 1000 m²-ig, robusztus kialakítással.";
-        link = "https://segwayrobotfunyiro.hu/robotfunyiro/segway-navimow-h210e-rb1aa-12-05-01-0001.html";
-      }
-    } else if (meret <= 1500) {
-      modell = "Segway Navimow H215E";
-      indoklas = "Nagy teljesítményű gép, amely 1500 m²-ig biztosítja a kert tökéletes ápoltságát.";
-      link = "https://segwayrobotfunyiro.hu/robotfunyiro/segway-navimow-h215e-rb1aa-12-05-03-0001.html";
-    } else if (meret <= 3000) {
-      modell = "Segway Navimow H230E";
-      indoklas = "A legnagyobb kapacitású H-szériás modell nagy családi kertekhez.";
-      link = "https://segwayrobotfunyiro.hu/robotfunyiro/segway-navimow-h230e-rb1aa-12-05-04-0001.html";
-    } else if (meret <= 4200) {
-      modell = "Segway Navimow X420E";
-      indoklas = "Az új generációs X-széria nagy területekre és professzionális felhasználásra.";
-      link = "https://segwayrobotfunyiro.hu/robotfunyiro/segway-navimow-x420e-rb1aa-12-06-01-0002.html";
-    } else {
-      modell = "Segway Navimow X450E";
-      indoklas = "A csúcsmodell, amely az extrém nagy területeken is hatékonyan dolgozik.";
-      link = "https://segwayrobotfunyiro.hu/robotfunyiro/segway-navimow-x450e-rb1aa-12-06-03-0001.html";
     }
 
-    // --- RESEND E-MAIL KÜLDÉS API HÍVÁS ---
-    console.log("E-mail küldés indítása a szerver felé...");
-    try {
-      const response = await fetch("app/api/email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email,
-          telepules: telepules,
-          meret: meret,
-          lejto: lejto,
-          arnyekolt: arnyekoltValue,
-          ajanlott_modell: modell,
-          kereskedo_neve: nearestKereskedo.nev,
-        })
-      });
-      const responseData = await response.json();
-      console.log("A szerver válasza:", responseData);
-    } catch (error) {
-      console.error("Hiba az e-mail küldésekor:", error);
-    }
+    fetchSupabaseData();
+  }, []);
 
-    // --- ANIMÁCIÓ ---
-    setIsAnimating(true);
-    setEredmeny(null);
-    setProgress(0);
+  const name = dentalData?.name || "Crown Dental Kft.";
+  const address = dentalData?.address || "2500 Esztergom, Petőfi Sándor utca 11.";
+  const phone = "06 30 589 2468";
+  const mapsUrl = "https://maps.app.goo.gl/1bnCmbFnTZGTRJeQA";
 
-    let currentProgress = 0;
-    const progressInterval = setInterval(() => {
-      currentProgress += 1;
-      if (currentProgress <= 100) setProgress(currentProgress);
-      if (currentProgress >= 100) clearInterval(progressInterval);
-    }, 25);
-
-    setTimeout(() => {
-      clearInterval(progressInterval);
-      setIsAnimating(false);
-      setEredmeny({ modell, indoklas, link, kereskedo: nearestKereskedo, tavolsag: tavolsagKm });
-    }, 2800);
-  };
+  const services = [
+    { title: "Fogeltávolítás", desc: "Sürgősségi extrakció panaszos, nem menthető fogak esetén.", icon: "🦷" },
+    { title: "Vérzéscsillapítás", desc: "Vérzések profi ellátása és megszüntetése.", icon: "🩸" },
+    { title: "Idegentest-eltávolítás", desc: "Beékelődött tárgyak vagy ételmaradékok szakszerű eltávolítása.", icon: "🔍" },
+    { title: "Törött fog lecsiszolása", desc: "Éles, vágó felületek korrekciója a nyelv és lágyrész védelmében.", icon: "💎" },
+    { title: "Gyökércsatorna megnyitása", desc: "Feszítő fájdalom megszüntetése gyulladt fogak trepanálásával.", icon: "⚡" },
+    { title: "Diagnosztika & Röntgen", desc: "Csak akkor, ha ez szükséges a kezeléshez.", icon: "📸" },
+  ];
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center p-2 font-sans bg-cover bg-fixed transition-all duration-700" 
-      style={{ 
-        backgroundImage: "url('/segwayhatter.jpg')",
-        backgroundPosition: "right 15% center"
-      }}>
-      
-      <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]"></div>
+    <main className="relative min-h-screen bg-[#F4FBFF] text-[#17394E] flex flex-col" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <div className="flex-grow pb-16">
+        {/* 1. NAVIGATION */}
+        <div style={{ position: 'absolute', top: '1rem', left: 0, right: 0, zIndex: 9999, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 1rem', gap: '0.5rem', pointerEvents: 'none' }}>
+          <nav className="bg-[#7FBCE4]/95 backdrop-blur-md text-[#17394E] py-3 px-6 md:px-8 rounded-full shadow-2xl flex items-center gap-4 md:gap-8 border border-[#A8D6F0]/60" style={{ pointerEvents: 'auto' }}>
+            <div className="flex items-center gap-3 font-bold tracking-tighter text-lg border-r border-[#4F9FCF]/50 pr-4 md:pr-6 uppercase shrink-0" style={{ fontFamily: "'DM Serif Display', serif" }}>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/9/9d/Esztergom_c%C3%ADmere.jpg" alt="Esztergom" className="h-9 w-auto rounded-sm object-contain" />
+              Esztergom
+            </div>
 
-      <main className="relative z-10 w-full max-w-2xl bg-white/95 backdrop-blur-3xl shadow-[0_30px_100px_-10px_rgba(0,0,0,0.5)] rounded-[2.5rem] overflow-hidden border border-white/40">
-        
-        {/* --- FEJLÉC --- */}
-        <div className="bg-gray-100 p-4 md:p-5 text-center border-b border-gray-200 relative">
-          <div className="flex justify-center mb-3">
-               <img 
-                 src="/logo.svg" 
-                 alt="Segway Navimow Logo" 
-                 className="h-40 md:h-[200px] w-auto max-w-full object-contain"
-                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
-               />
+            <div className="hidden md:flex gap-8 text-xs font-semibold uppercase tracking-widest text-[#245A78]">
+              <a href="/esztergomi-lakosok" className="hover:text-[#0F2B3D] hover:scale-110 transition-all">Esztergomi Lakosok</a>
+            </div>
+
+            <div className="bg-[#4F9FCF] h-2 w-2 rounded-full animate-pulse shadow-[0_0_10px_rgba(79,159,207,0.9)] shrink-0"></div>
+          </nav>
+
+          <div className="flex md:hidden gap-2 flex-wrap justify-center" style={{ pointerEvents: 'auto' }}>
+            <a href="/esztergomi-lakosok" className="bg-[#6EB5DE]/95 backdrop-blur-md text-[#17394E] hover:text-[#0F2B3D] hover:bg-[#5DA9D5] text-[11px] font-semibold uppercase tracking-widest px-4 py-2 rounded-full border border-[#A8D6F0]/60 shadow-lg transition-all">
+              Esztergomi Lakosok
+            </a>
           </div>
-
-          <h1 className="text-xl md:text-3xl font-black uppercase tracking-tighter italic text-gray-950">
-            Robotfűnyíró Kalkulátor
-          </h1>
-          <p className="mt-1 text-gray-500 font-bold text-[10px] md:text-xs max-w-md mx-auto leading-tight">
-            Találja meg a tökéletes Segway Navimow robotfűnyírót másodpercek alatt!
-          </p>
         </div>
-        
-        <form onSubmit={szamolas} className="p-4 md:p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
-            <div className="flex flex-col">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Kert mérete (m²)</label>
-              <div className="relative">
-                <input name="meret" type="number" placeholder="Pl. 500" required 
-                  className="w-full pl-4 pr-10 py-3 bg-white border border-gray-200 rounded-2xl focus:border-orange-500 transition-all text-gray-950 font-bold text-lg outline-none shadow-sm" />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-black text-xs">m²</span>
-              </div>
-            </div>
 
-            <div className="flex flex-col">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Max. Lejtő (%)</label>
-              <div className="relative">
-                <input name="lejto" type="number" placeholder="Pl. 25" required 
-                  className="w-full pl-4 pr-10 py-3 bg-white border border-gray-200 rounded-2xl focus:border-orange-500 transition-all text-gray-950 font-bold text-lg outline-none shadow-sm" />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-black text-xs">%</span>
-              </div>
-            </div>
+        {/* 2. HERO SECTION */}
+        <section className="relative min-h-[100dvh] md:min-h-[85vh] w-full flex flex-col items-center justify-center text-center overflow-hidden pt-44 pb-36 md:pt-40 md:pb-48">
+          <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 bg-gradient-to-b from-[#2E6F97]/80 via-[#7FBCE4]/30 to-[#F4FBFF] pointer-events-none z-10"></div>
+            <img src="https://images.unsplash.com/photo-1606811971618-4486d14f3f99?q=80&w=1974&auto=format&fit=crop" alt="Rendelő" className="w-full h-full object-cover relative z-0" />
+          </div>
 
-            <div className="flex flex-col md:col-span-2">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">GPS árnyékoltság (Kerti adottság)</label>
-              <div className="grid grid-cols-2 gap-4">
-                <div onClick={() => setArnyekoltValue("nem")}
-                  className={`cursor-pointer border-2 rounded-2xl p-3 md:p-4 flex items-center gap-4 transition-all duration-300 ${arnyekoltValue === 'nem' ? 'border-orange-500 bg-orange-50 shadow-md' : 'border-gray-100 bg-white hover:border-gray-200 shadow-sm'}`}>
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-2xl ${arnyekoltValue === 'nem' ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-400'}`}>☀️</div>
-                  <div>
-                    <div className="font-black text-[10px] md:text-xs text-gray-900 uppercase">Tiszta</div>
-                    <div className="text-[8px] md:text-[10px] text-gray-400 font-bold leading-tight">Nyílt égbolt, jó rálátás</div>
-                  </div>
-                </div>
+          <div className="relative z-20 w-full max-w-[95vw] xl:max-w-[85vw] px-4 md:px-6 mt-8 md:mt-12 flex flex-col items-center">
+            <h1 className="flex justify-between items-center w-full text-[7.5vw] sm:text-[6.5vw] md:text-[5.5vw] lg:text-[4.8vw] whitespace-nowrap text-white mb-6 md:mb-8 tracking-tight leading-tight font-bold drop-shadow-xl">
+              <span>Fogorvosi</span>
+              <span>Ügyeleti</span>
+              <span>Ellátás</span>
+            </h1>
 
-                <div onClick={() => setArnyekoltValue("igen")}
-                  className={`cursor-pointer border-2 rounded-2xl p-3 md:p-4 flex items-center gap-4 transition-all duration-300 ${arnyekoltValue === 'igen' ? 'border-orange-500 bg-orange-50 shadow-md' : 'border-gray-100 bg-white hover:border-gray-200 shadow-sm'}`}>
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-2xl ${arnyekoltValue === 'igen' ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-400'}`}>🌳</div>
-                  <div>
-                    <div className="font-black text-[10px] md:text-xs text-gray-900 uppercase">Zárt</div>
-                    <div className="text-[8px] md:text-[10px] text-gray-400 font-bold leading-tight">Fák, falak, árnyékos</div>
-                  </div>
-                </div>
-              </div>
-              <input type="hidden" name="arnyekolt" value={arnyekoltValue} />
-            </div>
-
-            <div className="flex flex-col">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Település</label>
-              <input name="telepules" type="text" placeholder="Pl. Esztergom" required 
-                onChange={() => setCityError("")}
-                className={`w-full px-5 py-3 bg-white border ${cityError ? 'border-red-500' : 'border-gray-200'} rounded-2xl outline-none font-bold text-base text-gray-900 shadow-sm transition-all`} />
-              {cityError && <p className="text-[10px] text-red-500 font-black mt-1 uppercase ml-1">{cityError}</p>}
-            </div>
-
-            <div className="flex flex-col">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">E-mail cím</label>
-              <input name="email" type="email" placeholder="nev@email.hu" required 
-                className="w-full px-5 py-3 bg-white border border-gray-200 rounded-2xl outline-none font-bold text-base text-gray-900 shadow-sm transition-all" />
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="flex items-center gap-4 cursor-pointer group px-1">
-                <input type="checkbox" required className="w-5 h-5 rounded-md border-gray-300 text-orange-500 cursor-pointer shadow-sm" />
-                <span className="text-[11px] text-gray-500 font-bold leading-tight group-hover:text-gray-800 transition-colors">
-                  Elfogadom az Adatvédelmi tájékoztatót.
-                </span>
-              </label>
-            </div>
-
-            <div className="md:col-span-2">
-              <button type="submit" disabled={isCheckingCity}
-                className="w-full bg-gray-950 hover:bg-orange-600 text-white py-4 px-8 rounded-2xl font-black text-lg uppercase tracking-[0.2em] shadow-xl transform active:scale-[0.98] transition-all duration-300 disabled:opacity-70 flex items-center justify-center gap-4 mt-2">
-                {isCheckingCity ? (
-                  <div className="w-6 h-6 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
-                ) : (
-                  "Ideális gép mutatása"
-                )}
-              </button>
+            <div className="mx-auto rounded-3xl border border-red-300/60 bg-red-500/30 px-6 py-5 md:px-8 shadow-2xl backdrop-blur-md w-full max-w-4xl">
+              <p className="text-[11px] sm:text-sm md:text-base lg:text-lg font-bold uppercase tracking-wide text-white leading-relaxed drop-shadow-md">
+                A sürgősségi ellátás csak érvényes esztergomi lakcímkártya esetében térítésmentes!
+              </p>
             </div>
           </div>
-        </form>
-      </main>
+        </section>
 
-      {/* --- EREDMÉNY MODAL --- */}
-      {eredmeny && !isAnimating && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in duration-300 overflow-y-auto">
-          <div className="relative w-full max-w-xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500 my-auto max-h-[90vh] flex flex-col border border-white/20">
-            
-            <button 
-              onClick={() => setEredmeny(null)} 
-              className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-black/50 text-white rounded-full font-bold z-[210] hover:bg-black transition-colors"
-            >✕</button>
-
-            <div className="overflow-y-auto flex-1">
-              <div className="bg-orange-600 p-8 md:p-10 text-center text-white relative">
-                <span className="inline-block bg-white/20 px-5 py-1.5 rounded-full text-[11px] font-black uppercase tracking-[0.2em] mb-4">Kalkulált eredmény</span>
-                <h2 className="text-3xl md:text-5xl font-black tracking-tighter italic drop-shadow-lg">{eredmeny.modell}</h2>
-              </div>
-              
-              <div className="p-8 md:p-12 text-center">
-                <p className="text-gray-700 font-bold leading-relaxed text-xl mb-10">{eredmeny.indoklas}</p>
-                
-                <div className="space-y-4">
-                  <a href={eredmeny.link} target="_blank" rel="noreferrer" 
-                    className="w-full flex items-center justify-center gap-4 px-8 py-5 bg-[#ff5a00] text-white rounded-2xl font-black text-xl uppercase tracking-widest hover:bg-orange-600 shadow-xl transform active:scale-[0.98] transition-all">
-                    Megtekintem a terméket
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </a>
-
-                  {eredmeny.kereskedo && (
-                    <div className="p-6 bg-gray-50 rounded-[2rem] border-2 border-gray-100 text-left shadow-inner mt-4">
-                      <p className="text-[10px] font-black text-orange-600 uppercase mb-2 flex items-center gap-2 italic tracking-widest">
-                         📍 Legközelebbi szakkereskedő
-                      </p>
-                      <h3 className="font-black text-gray-950 text-2xl tracking-tight">{eredmeny.kereskedo.nev}</h3>
-                      <p className="text-sm text-gray-500 font-bold mt-1">
-                        {eredmeny.kereskedo.cim} 
-                        {eredmeny.tavolsag !== null && <span className="text-orange-600 ml-2">(~{eredmeny.tavolsag} km)</span>}
-                      </p>
-                      
-                      <div className="grid grid-cols-2 gap-3 mt-5">
-                          <a href={`https://www.google.com/maps/dir/?api=1&destination=${eredmeny.kereskedo.lat},${eredmeny.kereskedo.lon}`} target="_blank" rel="noreferrer" className="bg-white border border-gray-200 py-3 rounded-xl text-center text-xs font-black uppercase tracking-widest hover:border-orange-500 transition-all shadow-sm text-gray-900">Útvonal</a>
-                          <a href={`tel:${eredmeny.kereskedo.telefon}`} className="bg-gray-950 text-white py-3 rounded-xl text-center text-xs font-black uppercase tracking-widest hover:bg-black transition-all shadow-md">Hívás indítása</a>
-                      </div>
-                    </div>
+        {/* 3. FLOATING GLASS ISLAND CARD */}
+        <section className="max-w-4xl mx-auto -mt-24 relative z-20 px-4">
+          <div className="rounded-[3.5rem] p-8 md:p-12 border border-white/30" style={{ background: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", boxShadow: "0 8px 60px rgba(23, 57, 78, 0.12), 0 2px 20px rgba(23, 57, 78, 0.06), inset 0 1px 0 rgba(255,255,255,0.6)" }}>
+            <div className="flex flex-col md:flex-row items-center justify-between mb-10 gap-4">
+              <div className="flex items-center gap-3 bg-[#DCEFFA]/70 px-5 py-2 rounded-full">
+                <span className="relative flex h-3 w-3">
+                  {status.isOpen ? (
+                    <><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span></>
+                  ) : (
+                    <><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span></>
                   )}
-                </div>
+                </span>
+                <span className={`text-xs font-bold uppercase tracking-wider ${status.isOpen ? "text-[#245A78]" : "text-red-700"}`}>{status.label}</span>
+              </div>
+              <div className="text-center md:text-right">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400 mb-1 font-bold">Rendelési idő</p>
+                <p className="text-sm font-semibold text-[#245A78] bg-white/60 px-4 py-1 rounded-full shadow-sm inline-block">{status.timeText}</p>
               </div>
             </div>
-          </div>
-        </div>
-      )}
 
-      {/* --- ANIMÁCIÓ --- */}
-      {isAnimating && (
-        <div className="fixed inset-0 z-[100] bg-gray-950/90 backdrop-blur-xl flex flex-col items-center justify-center p-8 text-center">
-          <div className="relative w-32 h-32 mb-10">
-            <div className="absolute inset-0 border-8 border-white/5 rounded-full"></div>
-            <div className="absolute inset-0 border-8 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
-            <div className="absolute inset-0 flex items-center justify-center text-4xl">🤖</div>
+            <div className="text-center flex flex-col items-center">
+              <p className="text-xs uppercase tracking-[0.4em] text-[#6AAFD8] mb-4 font-bold">Ügyeletet Ellátja</p>
+              <h2 className="text-4xl md:text-6xl text-[#17394E] mb-8 leading-tight" style={{ fontFamily: "'DM Serif Display', serif" }}>{name}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl">
+                <div className="bg-white/40 p-6 rounded-3xl border border-white/50 flex items-center gap-4 text-left group hover:bg-white/70 hover:shadow-md transition">
+                  <span className="text-2xl opacity-50 transition-opacity">📍</span>
+                  <div><p className="text-[10px] uppercase font-bold text-stone-400 tracking-widest">Helyszín</p><p className="text-sm font-medium">{address}</p></div>
+                </div>
+                <div className="bg-white/40 p-6 rounded-3xl border border-white/50 flex items-center gap-4 text-left group hover:bg-white/70 hover:shadow-md transition">
+                  <span className="text-2xl opacity-50 transition-opacity">📞</span>
+                  <div><p className="text-[10px] uppercase font-bold text-stone-400 tracking-widest">Telefonszám</p><p className="text-sm font-bold text-[#4B97C7]">{phone}</p></div>
+                </div>
+              </div>
+              <a href={mapsUrl} target="_blank" className="mt-10 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#17394E] hover:text-[#4B97C7] transition group">
+                Útvonaltervezés indítása <span className="transition-transform group-hover:translate-x-1">→</span>
+              </a>
+            </div>
           </div>
-          <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-[0.3em] italic animate-pulse">
-             Elemzés folyamatban...
-          </h2>
-          <p className="text-orange-500 font-black mt-6 text-6xl tracking-tighter italic">{progress}%</p>
+        </section>
+
+        {/* 4. SZOLGÁLTATÁSOK */}
+        <section className="max-w-6xl mx-auto mt-28 px-4 text-center">
+          <h2 className="text-4xl mb-4" style={{ fontFamily: "'DM Serif Display', serif" }}>Sürgősségi Ellátásaink</h2>
+          <div className="h-1 w-12 bg-[#7FBCE4] mx-auto rounded-full mb-16"></div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {services.map((s, i) => <ServiceCard key={i} title={s.title} desc={s.desc} icon={s.icon} />)}
+          </div>
+        </section>
+      </div>
+
+      <footer className="bg-[#17394E] text-white pt-16 pb-12 px-6 md:px-12 mt-10 rounded-t-[3rem] border-t border-[#2E6F97]/30">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+          <div>
+            <div className="flex items-center gap-3 font-bold text-xl uppercase mb-5" style={{ fontFamily: "'DM Serif Display', serif" }}>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/9/9d/Esztergom_c%C3%ADmere.jpg" alt="Esztergom" className="h-10 w-auto rounded-sm bg-white/10 p-1" />
+              Esztergomi Ügyelet
+            </div>
+            <p className="text-[#A8D6F0] text-sm leading-relaxed">Sürgősségi fogászati ellátás kizárólag Esztergom lakosai számára.</p>
+          </div>
+          <div>
+            <h4 className="text-[#7FBCE4] font-bold uppercase text-xs mb-6">Elérhetőségek</h4>
+            <ul className="space-y-4 text-sm">
+              <li className="flex items-start gap-3">📍 <span className="text-white/90">{address}</span></li>
+              <li className="flex items-center gap-3">📞 <span className="text-white font-bold">{phone}</span></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-[#7FBCE4] font-bold uppercase text-xs mb-6">Információk</h4>
+            <p className="text-sm text-[#A8D6F0] mb-2">Üzemeltető: <strong>{name}</strong></p>
+            <p className="text-sm text-[#A8D6F0]">Támogató: <strong>Esztergom Város Önkormányzata</strong></p>
+          </div>
         </div>
-      )}
-    </div>
+      </footer>
+    </main>
   );
 }
